@@ -148,3 +148,11 @@ mutation DeleteTarefas($tarefa: String!){
   }
 }
 `;
+export const Update_Saude = gql `
+mutation updateSaude($alergias: String!, $plano: String!, $temPlano: Boolean!,$restricoesAlimentares: String! ){
+  updateSaude(alergias:$alergias, plano:$plano, temPlano:$temPlano,restricoesAlimentares:$restricoesAlimentares ){
+    Saude{
+      id
+    }
+  }
+}`;

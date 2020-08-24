@@ -1,13 +1,13 @@
 import React,{Suspense,lazy, useState, useEffect} from 'react';
 import {Table,Tabs ,Card, Col, Row ,Menu} from 'antd';
-import {Popconfirm ,Form, Input, Button, Space ,AutoComplete} from 'antd';
+import {Switch,Popconfirm ,Form, Input, Button, Space ,AutoComplete} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
 import { client2 } from "../../../settings";
 import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation } from '@apollo/client';
-import {Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Create_Saude} from "../../../Queries"
+import {Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
 import { updateSaude } from '../../../store/reducers/personal_data_reducers';
 const { TabPane } = Tabs;
 
@@ -364,7 +364,7 @@ export const DadosSaude = (props)=>{
         <Resumo/>
       </TabPane>
       <TabPane tab={"Atualizar Saúde"} key={2} >
-        <UpdateSaude/>
+        <UpdateSaude refetch={props.refetch}/>
       </TabPane>
       <TabPane tab={"Contatos Emergência"} key={3} >
         <ContatosEmergencia/>
@@ -388,6 +388,9 @@ const Resumo = (props) =>{
   )
 }
 export const UpdateSaude = (props) => {
+  const [updateSaude, { loading: mutationLoading, error: mutationError,data }] = useMutation(Update_Saude);
+  const {refetch} = props
+  const storage = useSelector(state => state)
     const layout = {
       labelCol: { span: 8},
       wrapperCol: { span: 10 },
@@ -404,26 +407,41 @@ export const UpdateSaude = (props) => {
       },
     };
   const onFinish = values => {
-    console.log(values);
+    updateSaude({variables:{alergias:values.user.alergias,plano:values.user.plano,temPlano: values.user.temPlano,restricoesAlimentares: values.user.restrictions === null ? "" : values.user.restrictions}})
+    refetch()
   };
-
+  function onChange(checked) {
+    //console.log(`switch to ${checked}`);
+  }
   return (
     <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
-      <Form.Item name={['user', 'name']} label="Name" rules={[{ required: true }]}>
-        <Input />
+      <Form.Item initialValue = {storage.person.personal.saude.temPlano} name={['user', 'temPlano']} label="Tem Plano de Saude?" >
+        <Switch 
+        //defaultChecked = {storage.person.personal.saude.temPlano} onChange={onChange} 
+          
+        />
       </Form.Item>
-      <Form.Item name={['user', 'email']} label="Plano de Saude" rules={[{ type: 'email' }]}>
-        <Input />
+      <Form.Item initialValue = {storage.person.personal.saude.plano} name={['user', 'plano']}  label="Plano de Saude" >
+        <Input  
+          //defaultValue = {storage.person.personal.saude.plano} 
+
+        />
       </Form.Item>
-      <Form.Item name={['user', 'website']} label="Alergias">
-        <Input.TextArea />
+      <Form.Item initialValue  = {storage.person.personal.saude.alergias} name={['user', 'alergias']} label="Alergias">
+        <Input 
+          //defaultValue = {storage.person.personal.saude.alergias} 
+
+        />
       </Form.Item>
-      <Form.Item name={['user', 'restrictions']} label="Restrições Alimentares">
-        <Input.TextArea />
+      <Form.Item initialValue =  {storage.person.personal.saude.restricoesAlimentares} name={['user', 'restrictions']} label="Restrições Alimentares">
+        <Input 
+          //defaultValue = {storage.person.personal.saude.restricoesAlimentares}
+
+        />
       </Form.Item>
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit">
-          Submit
+          Salvar
         </Button>
       </Form.Item>
     </Form>
@@ -445,13 +463,14 @@ const ContatosEmergencia=(props)=>{
   })
   
   const columns = [
-    { title: 'Numero', dataIndex: 'numero', key: 'numero' },
     
     {
       title: 'Nome',
       dataIndex: 'nome',
       key: 'nome',
     },
+    { title: 'Numero', dataIndex: 'numero', key: 'numero' },
+
   ];
   return(
     <Tabela columns= {columns} data = {data_table}/>
@@ -461,7 +480,7 @@ const AddContatosEmergencia = (props) => {
   const [addContato, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Contato);
   const storage = useSelector(state => state)
   const {refetch} = props
-  console.log(storage.person)
+  //console.log(storage.person)
   const onFinish = values => {
    
     values.contato.map(v => {
@@ -492,15 +511,7 @@ const AddContatosEmergencia = (props) => {
           <div>
             {fields.map(field => (
               <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
-                <Form.Item
-                  {...field}
-                  name={[field.name, 'numero']}
-                  fieldKey={[field.fieldKey, 'numero']}
-                  rules={[{ required: true, message: 'Faltando Adicionar Numero' }]}
-                >
-                  <Input placeholder="Numero" />
-                </Form.Item>
-                
+               
                 <Form.Item
                   {...field}
                   name={[field.name, 'responsible']}
@@ -510,7 +521,14 @@ const AddContatosEmergencia = (props) => {
                   <Input placeholder="Nome do Contato" />
                   
                 </Form.Item>
-
+                <Form.Item
+                  {...field}
+                  name={[field.name, 'numero']}
+                  fieldKey={[field.fieldKey, 'numero']}
+                  rules={[{ required: true, message: 'Faltando Adicionar Numero' }]}
+                >
+                  <Input placeholder="Numero" />
+                </Form.Item>
                 <MinusCircleOutlined
                   onClick={() => {
                     remove(field.name);
