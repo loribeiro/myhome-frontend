@@ -58,7 +58,17 @@ query{
       firstName
       lastName
     }
-    
+    saude{
+      alergias
+      contatoEmergencia{
+        id
+        nome
+        numero
+      }
+      temPlano
+      plano
+      restricoesAlimentares
+    }
     lar{
       nome
       pessoaSet{
@@ -68,7 +78,11 @@ query{
           firstName
           lastName
         }
-       
+        itensSet{
+          id
+          objeto
+          
+        }
         saude{
           alergias
           contatoEmergencia{
@@ -94,6 +108,43 @@ query{
       }
     }
     
+  }
+}
+`;
+export const Create_Bem = gql `
+mutation createBens($objeto: String!, $pessoa: String!){
+  createBens(objeto:$objeto,pessoa:$pessoa){
+    Bens{
+      objeto
+    }
+  }
+}
+`;
+export const Create_Contato = gql `
+mutation createContato($nome: String!, $numero: String!){
+  createContato(nome:$nome,numero:$numero){
+    Contato{
+      nome
+      numero
+    }
+  }
+}
+`;
+export const Create_Saude = gql `
+mutation createSaude($alergias: String!, $temPlano: Boolean!,$plano: String!, $restricoesAlimentares: String!){
+  createSaude(alergias:$alergias, temPlano:$temPlano,plano:$plano, restricoesAlimentares:$restricoesAlimentares){
+    Saude{
+      id
+    }
+  }
+}
+`;
+export const Delete_Tarefas = gql `
+mutation DeleteTarefas($tarefa: String!){
+  deleteTarefas(tarefa:$tarefa){
+    Tarefas{
+      id
+    }
   }
 }
 `;

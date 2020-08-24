@@ -1,12 +1,16 @@
 import React,{Suspense,lazy, useState, useEffect} from 'react';
-import {Table ,Card, Col, Row } from 'antd';
-import { Form, Input, Button, Space ,AutoComplete} from 'antd';
+import {Table,Tabs ,Card, Col, Row ,Menu} from 'antd';
+import {Popconfirm ,Form, Input, Button, Space ,AutoComplete} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
 import { client2 } from "../../../settings";
 import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation } from '@apollo/client';
-import {Create_Task} from "../../../Queries"
+import {Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Create_Saude} from "../../../Queries"
+import { updateSaude } from '../../../store/reducers/personal_data_reducers';
+const { TabPane } = Tabs;
+
 
 export const VisaoGeral = (props) =>{
     const Moradores = (props)=>{
@@ -15,7 +19,10 @@ export const VisaoGeral = (props) =>{
         return(
             <Card title="Moradores" bordered={true}>
                     {storage.person.moradores.map((info)=>(
+                      <div key={info.login.id} style={{display:'grid', gridTemplateColumns:"1fr 1fr"}}>
                         <h3 key={info.login.id}>{info.login.firstName} {info.login.lastName}</h3>
+                        <Button type="primary" shape="round">detalhes</Button> 
+                      </div>
                         //info.map(m=> <h1>{m.id}</h1>)
                     )
                         
@@ -66,11 +73,13 @@ export const VisaoGeral = (props) =>{
 
 
 export const Tarefas = (props) =>{
+  const [deleteTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Delete_Tarefas);
   const storage = useSelector(state => state)
-  const data = []
-  console.log(storage.person.tarefas)
+  const data_table = []
+  const {refetch} = props
+  
   storage.person.tarefas.map(task =>{
-    data.push({
+    data_table.push({
       key:task.id,
       tarefa: task.tarefa,
       description:"Responsaveis: "+ task.responsavel.map(p => p.login.firstName+" "+p.login.lastName)
@@ -83,17 +92,20 @@ export const Tarefas = (props) =>{
           title: 'Excluir Tarefa',
           dataIndex: '',
           key: 'x',
-          render: () => <a>Excluir</a>,
+          render: (text, record) =><Popconfirm title="Tem certeza que quer deletar?" onConfirm={() => {deleteTask({variables:{tarefa:record.key}}); refetch()}}>
+                                        <a>Excluir</a>
+                                      </Popconfirm>,
         },
       ];
 
     return(
         <div>
-            <Tabela columns= {columns} data = {data}/>
-            <AdicionarTarefas/>
+            <Tabela columns= {columns} data = {data_table}/>
+            <AdicionarTarefas refetch = {props.refetch}/>
         </div>
     )
 } 
+
 const Tabela = (props) =>{
     
     return(
@@ -110,10 +122,11 @@ const Tabela = (props) =>{
         </div>
     )
 }
-const AdicionarTarefas = () => {
+const AdicionarTarefas = (props) => {
     const storage = useSelector(state => state)
     const [addTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Task);
     const dataSource = []
+    const {refetch} = props
     storage.person.moradores.map((info)=>
     
     dataSource.push({value: info.login.firstName +" "+info.login.lastName,id: info.id},)
@@ -127,6 +140,7 @@ const AdicionarTarefas = () => {
         addTask({ variables: { responsavel:result.id, tarefa:v.task} })
         
       })
+      refetch()
     };
    
     const onSelect = (value,info) => {
@@ -208,12 +222,25 @@ const AdicionarTarefas = () => {
 
 export const Bens = (props) =>{
   const storage = useSelector(state => state)
-  const data = []
+  
+  const data_table = []
+ 
+  storage.person.moradores.map(morador =>{
+    morador.itensSet.map(item=>{
+      data_table.push({
+        key:item.id,
+        bem: item.objeto,
+        dono:morador.login.firstName+" "+morador.login.lastName,
+        
+      },)
+    })
+  })
+  
   const columns = [
-    { title: 'Ben Pessoal', dataIndex: 'ben', key: 'ben' },
+    { title: 'Bem Pessoal', dataIndex: 'bem', key: 'bem' },
     
     {
-      title: 'Dono',
+      title: 'Proprietário',
       dataIndex: 'dono',
       key: 'dono',
     },
@@ -221,35 +248,49 @@ export const Bens = (props) =>{
   return(
     <div>
 
-      <Tabela columns= {columns} data = {data}/>
-      <AdicionarBens/>
+      <Tabela columns= {columns} data = {data_table}/>
+      <AdicionarBens refetch = {props.refetch}/>
     </div>
   )
 }
 
 const AdicionarBens = (props) => {
+  const [addBem, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Bem);
   const storage = useSelector(state => state)
+  const action = useDispatch()
+  const {refetch} = props
   const dataSource = []
   storage.person.moradores.map((info)=>
     
     dataSource.push({value: info.login.firstName +" "+info.login.lastName,id: info.id},)
     )
   const onFinish = values => {
-    values.tasks.map(v => {
+   
+    values.bem.map(v => {
       var result = dataSource.find(obj => {
         return obj.value === v.responsible
       })
-      //addTask({ variables: { responsavel:result.id, tarefa:v.task} })
+      addBem({ variables: { pessoa:result.id, objeto:v.bem} })
       
     })
+    refetch()
   };
  
   const onSelect = (value,info) => {
       console.log('onSelect', info.id);
   }
+  
+  if(mutationLoading){
+   
+    return(<div>salvando</div>)
+  }
+  /* if(data){
+    
+    (props.refetch)();
+  } */
   return(
     <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
-    <Form.List name="ben">
+    <Form.List name="bem">
       {(fields, { add, remove }) => {
         return (
           <div>
@@ -257,11 +298,11 @@ const AdicionarBens = (props) => {
               <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
                 <Form.Item
                   {...field}
-                  name={[field.name, 'ben']}
-                  fieldKey={[field.fieldKey, 'ben']}
-                  rules={[{ required: true, message: 'Faltando Adicionar Ben' }]}
+                  name={[field.name, 'bem']}
+                  fieldKey={[field.fieldKey, 'bem']}
+                  rules={[{ required: true, message: 'Faltando Adicionar Bem' }]}
                 >
-                  <Input placeholder="Ben" />
+                  <Input placeholder="Bem" />
                 </Form.Item>
                 
                 <Form.Item
@@ -277,7 +318,7 @@ const AdicionarBens = (props) => {
                         filterOption={(inputValue, option) =>
                         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                         }
-                        placeholder="Dono(Ex:Lucas)"
+                        placeholder="Proprietario(Ex:Lucas)"
                         
                     />
                 </Form.Item>
@@ -298,7 +339,7 @@ const AdicionarBens = (props) => {
                 }}
                 block
               >
-                <PlusOutlined /> Adicionar Ben
+                <PlusOutlined /> Adicionar Bem
               </Button>
             </Form.Item>
           </div>
@@ -314,8 +355,39 @@ const AdicionarBens = (props) => {
   </Form>
   )
 }
-  
-export const DadosSaude = (props) => {
+export const DadosSaude = (props)=>{
+
+  return(
+    <Tabs defaultActiveKey="1" tabPosition="top" style={{ height: "100vh" }}>
+    
+      <TabPane tab={`Resumo`} key={1} >
+        <Resumo/>
+      </TabPane>
+      <TabPane tab={"Atualizar Saúde"} key={2} >
+        <UpdateSaude/>
+      </TabPane>
+      <TabPane tab={"Contatos Emergência"} key={3} >
+        <ContatosEmergencia/>
+        <AddContatosEmergencia refetch={props.refetch}/>
+      </TabPane>
+  </Tabs>
+  )
+}
+const Resumo = (props) =>{
+  const storage = useSelector(state => state)
+
+  return(
+    <div>
+      <h2>Nome: {storage.person.personal.nome}</h2>
+      <h2>Sobrenome: {storage.person.personal.sobrenome}</h2>
+      <h2>Idade: {storage.person.personal.idade}</h2>
+      <h2>Plano de Saude: {storage.person.personal.saude.plano}</h2>
+      <h2>Alergias: {storage.person.personal.saude.alergias}</h2>
+
+    </div>
+  )
+}
+export const UpdateSaude = (props) => {
     const layout = {
       labelCol: { span: 8},
       wrapperCol: { span: 10 },
@@ -357,3 +429,117 @@ export const DadosSaude = (props) => {
     </Form>
   );
 };
+const ContatosEmergencia=(props)=>{
+  const storage = useSelector(state => state)
+  
+  const data_table = []
+ 
+  storage.person.personal.saude.contatoEmergencia.map(contato =>{
+    data_table.push({
+      key:contato.id,
+      nome: contato.nome,
+      numero:contato.numero,
+      
+    },)
+    
+  })
+  
+  const columns = [
+    { title: 'Numero', dataIndex: 'numero', key: 'numero' },
+    
+    {
+      title: 'Nome',
+      dataIndex: 'nome',
+      key: 'nome',
+    },
+  ];
+  return(
+    <Tabela columns= {columns} data = {data_table}/>
+  )
+}
+const AddContatosEmergencia = (props) => {
+  const [addContato, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Contato);
+  const storage = useSelector(state => state)
+  const {refetch} = props
+  console.log(storage.person)
+  const onFinish = values => {
+   
+    values.contato.map(v => {
+      
+      addContato({ variables: { nome:v.responsible, numero:v.numero} })
+      
+    })
+    refetch()
+  };
+ 
+  const onSelect = (value,info) => {
+      console.log('onSelect', info.id);
+  }
+  
+  if(mutationLoading){
+   
+    return(<div>salvando</div>)
+  }
+  /* if(data){
+    
+    (props.refetch)();
+  } */
+  return(
+    <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+    <Form.List name="contato">
+      {(fields, { add, remove }) => {
+        return (
+          <div>
+            {fields.map(field => (
+              <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
+                <Form.Item
+                  {...field}
+                  name={[field.name, 'numero']}
+                  fieldKey={[field.fieldKey, 'numero']}
+                  rules={[{ required: true, message: 'Faltando Adicionar Numero' }]}
+                >
+                  <Input placeholder="Numero" />
+                </Form.Item>
+                
+                <Form.Item
+                  {...field}
+                  name={[field.name, 'responsible']}
+                  fieldKey={[field.fieldKey, 'responsible']}
+                  rules={[{ required: true, message: 'Faltando Adicionar Nome' }]}
+                >
+                  <Input placeholder="Nome do Contato" />
+                  
+                </Form.Item>
+
+                <MinusCircleOutlined
+                  onClick={() => {
+                    remove(field.name);
+                  }}
+                />
+              </Space>
+            ))}
+
+            <Form.Item>
+              <Button
+                type="dashed"
+                onClick={() => {
+                  add();
+                }}
+                block
+              >
+                <PlusOutlined /> Adicionar Contato
+              </Button>
+            </Form.Item>
+          </div>
+        );
+      }}
+    </Form.List>
+
+    <Form.Item style= {{textAlign:"center"}}>
+      <Button type="primary" htmlType="submit">
+        Salvar
+      </Button>
+    </Form.Item>
+  </Form>
+  )
+}
