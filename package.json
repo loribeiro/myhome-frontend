@@ -15,9 +15,12 @@
     "apollo-boost": "^0.4.9",
     "apollo-datasource-rest": "^0.9.3",
     "craco-less": "^1.17.0",
+    "express": "^4.17.1",
+    "express-favicon": "^2.0.1",
     "gh-pages": "^3.1.0",
     "graphql": "^15.3.0",
     "hookrouter": "^1.2.3",
+    "path": "^0.12.7",
     "react": "^16.13.1",
     "react-device-detect": "^1.13.1",
     "react-dom": "^16.13.1",
@@ -26,11 +29,14 @@
     "react-scripts": "3.4.2",
     "react-simple-chatbot": "^0.6.1",
     "redux": "^4.0.5",
-    "save-dev": "0.0.1-security"
+    "save-dev": "0.0.1-security",
+    "serve": "^11.3.2",
+    "serve-favicon": "^2.5.0"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
+    "old": "craco start",
+    "start": "export https=true && serve -s build",
+    "build": "GENERATE_SOURCEMAP=false craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
