@@ -9,8 +9,8 @@ const HomePageDesktop = (props) =>{
             <TopBar/>
             <Content>
                 <FirstArea/>
-                <FourthArea/>
                 <ThirdArea/>
+                <FourthArea/>
                 <SecondArea/>
             </Content>
             <Footer style={{textAlign:"center"}}>myHome</Footer>

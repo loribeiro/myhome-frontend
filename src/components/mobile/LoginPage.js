@@ -8,9 +8,12 @@ const LoginPageMobile = (props) =>{
     }
     return(
         <div>
-            <div href = "/" className="Logo-Principal">
+        <a href = "/">
+
+            <div  className="Logo-Principal">
                     
             </div>
+        </a>
 
             <LoginArea/>
 

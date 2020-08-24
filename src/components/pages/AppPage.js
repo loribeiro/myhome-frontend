@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {Get_Home_ID, Retrieve_Person} from "../../Queries"
 import { client2 } from "../../settings";
 import { gql, useQuery} from '@apollo/client';
-import {TopBar} from "../desktop/components/TopBar"
+import {TopBar2} from "../desktop/components/TopBar"
 import {VisaoGeral,Tarefas,DadosSaude,Bens} from "../desktop/components/AppPage"
 import { isMobile, isTablet } from 'react-device-detect';
 const { TextArea } = Input;
@@ -111,7 +111,13 @@ const AppPageLogic = (props) =>{
             </Menu>
             </Sider>
             <Layout>
-            {/* <TopBar/> */}
+            {
+                isMobile
+                ?
+                <TopBar2/>
+                :
+                null
+            }
             <Content style={{ margin: '24px 16px 0' }}>
                 <div className="site-layout-background" style={{ padding: 24, minHeight: "75vh" }}>
                     <ContentAbstraction opcao={opcao} refetch = {props.refetch}/>

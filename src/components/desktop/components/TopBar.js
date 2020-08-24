@@ -1,6 +1,7 @@
 import React,{Suspense,lazy} from 'react';
 import { Button,Layout ,Menu} from 'antd';
 import Logo from "../../images/logo.png"
+import {HorizontalLoginForm} from "./LoginForm"
 const { Header} = Layout;
 const { SubMenu } = Menu;
 export const TopBar = (props) =>{
@@ -20,9 +21,21 @@ export const TopBar = (props) =>{
                             </div>
                 </Menu.Item>
                 <Menu.Item key="2">Blog</Menu.Item>
-                <Menu.Item key="3" ><a href="/login">Login</a></Menu.Item>
-                <Menu.Item key="4"><a href="/cadastro">Cadastro</a></Menu.Item>
+                <Menu.Item key="3"><a href="/cadastro">Cadastro</a></Menu.Item>
+                <Menu.Item key="4" style={{marginLeft:"20vw", marginBottom:"15px"}}><HorizontalLoginForm/></Menu.Item>
             </Menu>
          </Header>
+    )
+}
+export const TopBar2 = (props) =>{
+    return(
+        <Header className="header" style={{backgroundColor:"white", textAlign:"center", position: 'fixed', zIndex: 1, width: '100%' }}>
+         <a href = "/">
+
+            <div  className="Logo-Barra">
+                    
+            </div>
+        </a>
+        </Header>
     )
 }

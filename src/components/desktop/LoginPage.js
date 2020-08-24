@@ -19,19 +19,15 @@ export default LoginPageDesktop;
 
 const Login = (props) =>{
     return(
-        <div style={{textAlign:"center",display:"grid", gridTemplateRows:"0.1fr 0.9fr"}}>
-            <div>
-                <h1 style={{marginTop:"10vh"}}>Faça o login na nossa plataforma!</h1>
-
-            </div>
-            
-            <div className="Login" style={{textAlign:"center",display:"grid", gridTemplateColumns:"1fr 1fr 1fr", minHeight:"95vh"}}>
-                        <div>
+        <div className="Login" style={{textAlign:"center",display:"grid", gridTemplateColumns:"1fr 1fr 1fr", minHeight:"95vh"}}>
+                        <div style= {{marginTop:"15vh"}}>
+                            
                             <LoginArea/>
+                            
                         </div>
                         <div></div>
                         <div></div>
             </div>
-        </div>
+        
     )
 }

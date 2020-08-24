@@ -5,7 +5,7 @@ import { ApolloLink, concat } from 'apollo-link';
 
 
 export const client2 = new ApolloClient({
-  uri: "http://localhost:8001/graphql/",
+  uri: "https://myhomebackend.herokuapp.com/graphql/",
   //uri:"https://linkkinbackend.herokuapp.com/graphql/",
   request: (operation) => {
     const token = getTokens()/* localStorage.getItem('token') */
@@ -21,7 +21,7 @@ export const client2 = new ApolloClient({
 })
 
  export const client = new ApolloClient({
-    uri: "http://localhost:8001/graphql/"
+    uri: "https://myhomebackend.herokuapp.com/graphql/"
     //uri:"https://linkkinbackend.herokuapp.com/graphql/"
     // credentials: "no-cors"
   }); 

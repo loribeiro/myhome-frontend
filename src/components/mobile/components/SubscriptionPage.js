@@ -118,7 +118,7 @@ export const FormRegistration2 = (props) =>{
      }
      //
      return(
-         <div style={{margin:"10vw", textAlign:"center"}}>
+         <div style={{ textAlign:"center"}}>
                 <Form onFinish={handleSubmit}>
                     <Form.Item hidden = {proximo}>
 
@@ -136,7 +136,7 @@ export const FormRegistration2 = (props) =>{
                         </Form.Item>
                         <Form.Item>
 
-                            <Button type="primary" style={{ width:"200px"}} shape="round" size="large" onClick={handleNext}>
+                            <Button type="danger" style={{ width:"200px"}} shape="round" size="large" onClick={handleNext}>
                                 Proximo
                             </Button>
                         </Form.Item>
@@ -190,7 +190,7 @@ export const FormRegistration2 = (props) =>{
                                         }} 
                                     onChange = {handleInputChange} 
                                     htmlType="submit"  
-                                        /*  onChange={this.handleChange} */ type="primary"  
+                                        /*  onChange={this.handleChange} */ type="danger"  
                                     style={{width:"200px"}} shape="round" size="large" >
                                 
                                     Cadastre-se

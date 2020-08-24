@@ -8,11 +8,16 @@ const SubscriptionPageMobile = (props) =>{
     }
     return(
         <div>
-            <div href="/" className="Logo-Principal">
-                    
-            </div>
+            <a href = "/">
 
-            <SubscriptionArea setLogged={setLogged} alreadyLogged={alreadyLogged}/>
+                <div  className="Logo-Principal">
+                        
+                </div>
+            </a>
+            <div style={{margin:"10%", textAlign:"center"}}>
+                <h1>Preencha as informações a seguir!</h1>
+                <SubscriptionArea setLogged={setLogged} alreadyLogged={alreadyLogged}/>
+            </div>
 
         </div>
     )

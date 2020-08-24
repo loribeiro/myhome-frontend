@@ -13,11 +13,12 @@ const SubscriptionPageDesktop = (props) =>{
     return(
         <Layout style={{}}>
             <TopBar/>
-            <Content style={{minHeight:"98vh"}}>
-                <div>
-                    <h1>Cadastro</h1>
+            <Content className = "Cadastro" style={{minHeight:"98vh"}}>
+                
+                <div style ={{marginTop:"25vh",marginLeft:"2vw", marginRight:"5vw",maxWidth:"50vw", textAlign:"center"}}>
+                    <h1 style={{color:"white"}}>Preencha as informações pessoais</h1>
+                    <SubscriptionArea setLogged={setLogged} alreadyLogged={alreadyLogged}/>
                 </div>
-                <SubscriptionArea setLogged={setLogged} alreadyLogged={alreadyLogged}/>
             </Content>
             <Footer style={{textAlign:"center"}}>myHome</Footer>
         </Layout>

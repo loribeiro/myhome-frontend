@@ -1,6 +1,6 @@
 import React,{Suspense,lazy, useState, useEffect} from 'react';
 import {Table,Tabs ,Card, Col, Row ,Menu} from 'antd';
-import {Switch,Popconfirm ,Form, Input, Button, Space ,AutoComplete} from 'antd';
+import {Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
@@ -9,27 +9,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation } from '@apollo/client';
 import {Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
 import { updateSaude } from '../../../store/reducers/personal_data_reducers';
+import Sider from 'antd/lib/layout/Sider';
 const { TabPane } = Tabs;
 
 
 export const VisaoGeral = (props) =>{
-    const Moradores = (props)=>{
-        const storage = useSelector(state => state)
-
-        return(
-            <Card title="Moradores" bordered={true}>
-                    {storage.person.moradores.map((info)=>(
-                      <div key={info.login.id} style={{display:'grid', gridTemplateColumns:"1fr 1fr"}}>
-                        <h3 key={info.login.id}>{info.login.firstName} {info.login.lastName}</h3>
-                        <Button type="primary" shape="round">detalhes</Button> 
-                      </div>
-                        //info.map(m=> <h1>{m.id}</h1>)
-                    )
-                        
-                    )}
-            </Card>
-        )
-    }
+    
     const Despesas = (props) =>{
        return(
         <Card title="Despesas" bordered={true}>
@@ -71,6 +56,71 @@ export const VisaoGeral = (props) =>{
     )
 }
 
+
+const Moradores = (props)=>{
+  const storage = useSelector(state => state)
+  const [visible, setVisible] = useState(false);
+  const [informacoes, setInformacoes] = useState({})
+  const showDrawer = (info) => {
+    setVisible(true);
+    setInformacoes(info)
+    console.log(info)
+  };
+  
+  const onClose = () => {
+    setVisible(false);
+  };
+  return(
+      <Card title="Moradores" bordered={true}>
+              {storage.person.moradores.map((info)=>(
+                <div key={info.login.id} style={{display:'grid', gridTemplateColumns:"1fr 1fr"}}>
+                  <h3 key={info.login.id}>{info.login.firstName} {info.login.lastName}</h3>
+                  <Button size="small" style={{maxWidth:"80px"}} type="primary" onClick={()=>showDrawer(info)} shape="round">detalhes</Button>
+                  <Drawer
+                    title="Informações Pessoais"
+                    placement="right"
+                    closable={false}
+                    onClose={onClose}
+                    visible={visible}
+                    width={320}
+                    destroyOnClose
+                  >
+                    <Detalhes info = {informacoes}/>
+                    
+                  </Drawer> 
+                </div>
+                  //info.map(m=> <h1>{m.id}</h1>)
+              )
+                  
+              )}
+        
+             
+      </Card>
+  )
+}
+const Detalhes = (props)=>{
+  if(props.info.login.firstName !== null){
+    
+    return(
+      <div>
+        <Divider>Informações Básicas</Divider>
+        <p><strong>Nome: </strong>{props.info.login.firstName} {props.info.login.lastName }</p>
+        <p><strong>Alergias: </strong>{props.info.saude.alergias} </p>
+        <p><strong>Restrições Alimentares: </strong>{props.info.saude.restricoesAlimentares}</p>
+        <p><strong>Plano de Saude: </strong>{props.info.saude.plano}</p>
+        <Divider>Contatos de Emergência</Divider>
+        {props.info.saude.contatoEmergencia.map(contato =>(
+          <div key={contato}>
+            <p><strong>Nome:</strong> {contato.nome}</p>
+            <p><strong>Numero:</strong> {contato.numero}</p>
+            <Divider></Divider>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  return(<div></div>)
+}
 
 export const Tarefas = (props) =>{
   const [deleteTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Delete_Tarefas);
@@ -117,7 +167,7 @@ const Tabela = (props) =>{
                 rowExpandable: record => record.name !== 'Not Expandable',
                 }}
                 dataSource={props.data}
-                pagination={false}
+                pagination={true}
             />
         </div>
     )

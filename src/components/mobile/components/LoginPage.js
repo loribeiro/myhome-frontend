@@ -30,7 +30,7 @@ const Login = () => {
     console.log('Success:', event);
     setEntrando(true)
     
-    LoginIn({variables:{email:event.username , password: event.password}}).catch(err => {setEntrando(false)})
+    LoginIn({variables:{email:(event.username).toLowerCase() , password: event.password}}).catch(err => {setEntrando(false)})
   };
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
