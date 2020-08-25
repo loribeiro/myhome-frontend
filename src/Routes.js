@@ -1,17 +1,17 @@
 import React,{Suspense,lazy} from 'react';
 /* import { ApolloProvider } from 'react-apollo';
 import { client, client2 } from './settings'; */
-import HomePage from "./components/pages/HomePage"
-import LoginPage from "./components/pages/LoginPage"
-import SubscriptionPage from "./components/pages/SubscriptionPage"
-import AppPage from "./components/pages/AppPage"
-import JoinPage from "./components/pages/JoinHome"
+const HomePage= lazy(()=>import("./components/pages/HomePage")) 
+const LoginPage= lazy(()=>import("./components/pages/LoginPage")) 
+const SubscriptionPage= lazy(()=>import("./components/pages/SubscriptionPage"))
+const AppPage= lazy(()=>import("./components/pages/AppPage")) 
+const JoinPage= lazy(()=>import("./components/pages/JoinHome")) 
 const Routes = {
-    "/": () => <HomePage/>,//{/* <Suspense fallback = {<LoadingPageLite/>}><HomePage/></Suspense> , */}
-    "/login": () => <LoginPage/>,
-    "/cadastro": () => <SubscriptionPage/>,
-    "/app": () => <AppPage/>,
-    "/join": () => <JoinPage/>,
+    "/": () =><Suspense fallback={<div></div>}> <HomePage/></Suspense>,//{/* <Suspense fallback = {<LoadingPageLite/>}><HomePage/></Suspense> , */}
+    "/login": () =><Suspense fallback={<div></div>}><LoginPage/></Suspense> ,
+    "/cadastro": () => <Suspense fallback={<div></div>}><SubscriptionPage/></Suspense> ,
+    "/app": () => <Suspense fallback={<div></div>}><AppPage/></Suspense> ,
+    "/join": () => <Suspense fallback={<div></div>}><JoinPage/> </Suspense> ,
     
 };
 
