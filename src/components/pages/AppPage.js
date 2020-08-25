@@ -9,6 +9,8 @@ import { gql, useQuery} from '@apollo/client';
 import {TopBar2} from "../desktop/components/TopBar"
 import {VisaoGeral,Tarefas,DadosSaude,Bens} from "../desktop/components/AppPage"
 import { isMobile, isTablet } from 'react-device-detect';
+import PWAPrompt from 'react-ios-pwa-prompt'
+
 const { TextArea } = Input;
 const { Header, Content, Footer, Sider } = Layout;
 const { Option } = Select;
@@ -121,6 +123,11 @@ const AppPageLogic = (props) =>{
             <Content style={{ margin: '24px 16px 0' }}>
                 <div className="site-layout-background" style={{ padding: 24, minHeight: "75vh" }}>
                     <ContentAbstraction opcao={opcao} refetch = {props.refetch}/>
+                    <PWAPrompt copyTitle="Adicione a tela inicial!" 
+                     copyBody="Este site tem funcionalidade de aplicativo. Adicione a sua tela inicial para utilizar em tela cheia e sem internet!"
+                     copyShareButtonLabel ="1) Aperte o botão 'Compartilhar' "
+                     copyAddHomeButtonLabel = "2) Aperte 'Adicionar a HomeScreen'"
+                     />
                 </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>myHome</Footer>

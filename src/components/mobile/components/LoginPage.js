@@ -22,7 +22,7 @@ export const LoginArea = (props) => {
 
 const Login = () => {
   const[LoginIn,
-    { data}, ] = useMutation(Login_User_Query);
+    { data, loading}, ] = useMutation(Login_User_Query);
   const[entrando, setEntrando] = useState(false)
 
   const onFinish = (event) => {
@@ -81,12 +81,19 @@ const Login = () => {
                   Entrar
                 </Button>
                 :
-            <Button type="primary" style={{textAlign:"center", width:"200px"}} shape="round" size="large" loading>
-              Entrando
-            </Button>
+                null
           }
           </Form.Item>
     </Form>
+          {
+            entrando === true
+            ?
+            <Button type="primary" style={{textAlign:"center", width:"200px"}} shape="round" size="large" loading>
+              Entrando
+            </Button>
+            :
+            null
+          }
     </div>
     
 </div>
@@ -94,7 +101,7 @@ const Login = () => {
  }
   return (
     <div >
-        <div style = {{margin:"10vw"}}>
+        <div style = {{margin:"10vw",textAlign:"center"}}>
             <Form
               {...layout}
               name="basic"
@@ -118,24 +125,28 @@ const Login = () => {
                 <Input.Password />
               </Form.Item>
 
-              <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-                <Checkbox>Mantenha Conectado</Checkbox>
-              </Form.Item>
-
+              
               <Form.Item {...tailLayout}>
               {
-                entrando === false
-                ?
-                    <Button  type="primary" htmlType="submit">
-                      Entrar
-                    </Button>
-                    :
-                <Button type="primary" style={{textAlign:"center", width:"200px"}} shape="round" size="large" loading>
-                  Entrando
+            entrando === false
+            ?
+                <Button style={{marginRight:"50vw"}} type="primary" htmlType="submit">
+                  Entrar
                 </Button>
-              }
-              </Form.Item>
-        </Form>
+                :
+                null
+          }
+          </Form.Item>
+    </Form>
+          {
+            entrando === true
+            ?
+            <Button type="primary" style={{textAlign:"center", width:"200px"}} shape="round" size="large" loading>
+              Entrando
+            </Button>
+            :
+            null
+          }
         </div>
         <div style = {{textAlign:"center"}}>
           

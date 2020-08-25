@@ -4,23 +4,20 @@ import InstallPWA from './PwaInstallButton'
 import Task from '../../images/tasks.png'
 import Clock from '../../images/clock.png'
 import Bag from '../../images/bag_green.png'
+import PWAPrompt from 'react-ios-pwa-prompt'
 import  {DownOutlined}  from '@ant-design/icons';
 
 export const FirstArea = (props) => {
     return(
         
         <div className = "HomePage-FirstArea" >
-                <div className="Logo-Principal">
-                    
-                </div>
+               
                 <div>
 
-                    <h1 style={{color:"white", marginTop:"40px"}}>
-                        Tornando seu lar melhor
+                    <h1 style={{color:"white", marginTop:"20vh", marginLeft:"15px", marginRight:"15px"}}>
+                        Administre o seu lar em um só lugar.
                     </h1>
-                    <h2 style={{color:"white"}}>
-                       Gratuito e Inovador.
-                    </h2>
+                    
                     
                     <p style={{color:"white", margin:"2vw"}}><strong>
                         Construimos uma solução para você que compartilha o lar com amigos ou família e  
@@ -29,20 +26,25 @@ export const FirstArea = (props) => {
                      
                      <Button href="/login"  type="danger" shape="round">Cadastro/Login</Button>  
                      <InstallPWA/>
+                     <PWAPrompt copyTitle="Adicione a tela inicial!" 
+                     copyBody="Este site tem funcionalidade de aplicativo. Adicione a sua tela inicial para utilizar em tela cheia e sem internet!"
+                     copyShareButtonLabel ="1) Aperte o botão 'Compartilhar' "
+                     copyAddHomeButtonLabel = "2) Aperte 'Adicionar a HomeScreen'"
+                     permanentlyHideOnDismiss={false}
+                     promptOnVisit={1} timesToShow={3} 
+                     />
                 </div>
-                <a href="#next">
-                <h3 style={{color:"white"}}>
-                    conheça mais!
-                </h3>
-                    <DownOutlined style={{fontSize: '36px', color: 'white' }}  />
-                </a>
+                <div style={{marginTop:"50px"}}>
+
+                    <h2 style={{color:"white"}}>myHome</h2>
+                </div>
         </div>
     )
 }
 
 export const SecondArea = (props) => {
     return(
-        <div HomePage-SecondArea id = "next" style = {{display:'grid', gridTemplateRows:"1fr 1fr 1fr", fontSize:"15px"}}> 
+        <div HomePage-SecondArea id = "next" style = {{minHeight:"100vh",display:'grid', gridTemplateRows:"1fr 1fr 1fr", fontSize:"15px"}}> 
         {/* Comic Sans MS,Comic Sans,cursive */}
             <div style = {{display:"grid", gridTemplateColumns:"0.3fr 0.7fr",backgroundColor:"white"}}>
                 <div style={{marginTop:'15px'}}>

@@ -67,20 +67,20 @@ export const ThirdArea = (props) =>{
 export const FourthArea = (props) =>{
     return(
         <div className = "Quarta-Parte">
-            <div>
+            <div style={{display:"grid", gridTemplateRows:"1fr 1fr 1fr", textAlign:"center"}}>
+                <div></div>
+                <div></div>
                 <div>
-                    <p>
+                    <h2 style={{color:"white"}}>
                         Organize e faça o planejamento das atividades e tarefas da casa que você compartilha
                         com seus colegas de forma pratica, simples e divertida.  
-                    </p>
+                    </h2>
+                    
                 </div>
             </div>
             <div>
                 <div>
-                    <p>
-                        Faça o planejamento das suas compras e contas da casa, programe os seus 
-                        pagamentos de forma segura e não se perca nos prazos.
-                    </p>
+                    
                 </div>
             </div>
         </div>
