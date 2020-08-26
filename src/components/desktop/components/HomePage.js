@@ -29,9 +29,6 @@ export const FirstArea = (props) =>{
 export const SecondArea = (props) =>{
     return(
         <div className="Segunda-Parte">
-            <div>
-
-            </div>
             <div style={{textAlign:"center", marginTop:"30vh"}}>
                 <h1 style={{color:"white", fontSize:"37px" }}>Experiência completa no seu celular</h1>
                 <p style={{color:"white",fontSize:"18px"}}>
@@ -42,6 +39,9 @@ export const SecondArea = (props) =>{
                     para que você possa utiliza-lo para armazenar muito mais lembranças felizes da sua vida!
      
                 </p>
+            </div>
+            <div>
+
             </div>
         </div>
     )
