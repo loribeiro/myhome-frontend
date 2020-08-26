@@ -167,7 +167,7 @@ const Tabela = (props) =>{
                 rowExpandable: record => record.name !== 'Not Expandable',
                 }}
                 dataSource={props.data}
-                pagination={true}
+                pagination={false}
             />
         </div>
     )
@@ -428,11 +428,12 @@ const Resumo = (props) =>{
 
   return(
     <div>
-      <h2>Nome: {storage.person.personal.nome}</h2>
-      <h2>Sobrenome: {storage.person.personal.sobrenome}</h2>
-      <h2>Idade: {storage.person.personal.idade}</h2>
-      <h2>Plano de Saude: {storage.person.personal.saude.plano}</h2>
-      <h2>Alergias: {storage.person.personal.saude.alergias}</h2>
+    <Card title={storage.person.personal.nome + " " + storage.person.personal.sobrenome} bordered={false} style={{ width: 300 }}>
+      <p>Idade: {storage.person.personal.idade}</p>
+      <p>Plano de Saude: {storage.person.personal.saude.plano}</p>
+      <p>Alergias: {storage.person.personal.saude.alergias}</p>
+    </Card>
+      
 
     </div>
   )
@@ -489,7 +490,7 @@ export const UpdateSaude = (props) => {
 
         />
       </Form.Item>
-      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+      <Form.Item style={{marginRight:"120px"}} wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit">
           Salvar
         </Button>
