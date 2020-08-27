@@ -40,7 +40,7 @@ export const FormRegistration2 = (props) =>{
              if (inputs.password === inputs.password2 && inputs.checkbox === true && ((inputs.sobrenome!=="" || inputs.sobrenome !== undefined) &&(inputs.nome!=="" || inputs.nome !== undefined) &&(inputs.email!=="" || inputs.email !== undefined) && (inputs.senha!=="" || inputs.senha !== undefined) && (inputs.sexo !=="" || inputs.sexo !== undefined) ) ){
                 
                 setIsSubscribing(true); 
-                sendData({variables:{nome:inputs.nome, sobrenome: inputs.sobrenome,email:inputs.email , senha: inputs.password , sexo: inputs.sexo}}).catch(err => {})
+                sendData({variables:{nome:inputs.nome, sobrenome: inputs.sobrenome,email:(inputs.email).toLowerCase() , senha: inputs.password , sexo: inputs.sexo}}).catch(err => {})
                  
             }else{
                 
@@ -100,7 +100,7 @@ export const FormRegistration2 = (props) =>{
             //
        });
        const makingLogin = () => {
-            LoginIn({variables:{email:inputs.email , password: inputs.password}}).catch(err => {})
+            LoginIn({variables:{email:(inputs.email).toLowerCase() , password: inputs.password}}).catch(err => {})
             
        }
      //if (mutationLoading) return <div>loading</div>;
