@@ -7,7 +7,7 @@ import { setToken } from '../../../Token';
 export const HorizontalLoginForm = () => {
   const [form] = Form.useForm();
   const[LoginIn,
-    { data,error}, ] = useMutation(Login_User_Query);
+    { data,error,loading}, ] = useMutation(Login_User_Query);
   const [, forceUpdate] = useState();
 
   // To disable submit button at the beginning.
@@ -43,7 +43,13 @@ export const HorizontalLoginForm = () => {
         />
       </Form.Item>
       <Form.Item shouldUpdate={true}>
-        {() => (
+        {
+          loading
+          ?
+          <Button type="primary" loading>Entrando</Button>
+          :
+
+        () => (
           <Button
             type="primary"
             htmlType="submit"
@@ -54,7 +60,8 @@ export const HorizontalLoginForm = () => {
           >
             Entrar
           </Button>
-        )}
+        )
+        }      
       </Form.Item>
     </Form>
   );
