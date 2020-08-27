@@ -1,6 +1,6 @@
 import React,{Suspense,lazy, useState, useEffect} from 'react';
 import {Table,Tabs ,Card, Col, Row ,Menu} from 'antd';
-import {Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete} from 'antd';
+import {Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
@@ -461,11 +461,21 @@ export const UpdateSaude = (props) => {
     updateSaude({variables:{alergias:values.user.alergias,plano:values.user.plano,temPlano: values.user.temPlano,restricoesAlimentares: values.user.restrictions === null ? "" : values.user.restrictions}})
     refetch()
   };
-  function onChange(checked) {
-    //console.log(`switch to ${checked}`);
+  const openNotification = () => {
+    notification.open({
+      message: 'Informações salvas com sucesso!',
+      description:
+        'Agora seus colegas de quarto já podem ver suas informações de saúde atualizadas!',
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+  };
+  if(data){
+    openNotification();
   }
   return (
-    <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+    <Form {...layout} name="nest-messages" onFinish={onFinish}  validateMessages={validateMessages}>
       <Form.Item initialValue = {storage.person.personal.saude.temPlano} name={['user', 'temPlano']} label="Tem Plano de Saude?" >
         <Switch 
         //defaultChecked = {storage.person.personal.saude.temPlano} onChange={onChange} 
@@ -491,9 +501,17 @@ export const UpdateSaude = (props) => {
         />
       </Form.Item>
       <Form.Item style={{marginRight:"120px"}} wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+      {
+        mutationLoading
+        ?
+        <Button type="danger" loading>Salvando</Button>
+        :
+
         <Button type="primary" htmlType="submit">
           Salvar
         </Button>
+      }
+      
       </Form.Item>
     </Form>
   );
