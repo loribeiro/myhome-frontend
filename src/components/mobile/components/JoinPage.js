@@ -21,12 +21,7 @@ export const CreatingHouse = (props) =>{
         
         window.location.href = "/app"
     }
-    if(mutationLoading){
-        return(<div style={{textAlign:"center"}}>
-        <h1><strong>Quase lá :D</strong></h1>
-        <Spin size="small" />
-    </div>)
-    }
+    
     if(mutationError){
         return(
             <div>Algo deu errado, atualize a pagina e tente novamente</div>
@@ -43,7 +38,13 @@ export const CreatingHouse = (props) =>{
                         <Input onChange = {value=>{setNome(value.target.value)}} name ="casa" placeholder="Nome da Casa" />
                     </div>
                     <div>
-                        <Button onClick = {handleCreation} type="primary">Criar Casa</Button>
+                        {
+                            mutationLoading
+                            ?
+                            <Button type="danger" loading>Criando</Button>
+                            :
+                            <Button onClick = {handleCreation} type="primary">Criar Casa</Button>
+                        }
                     </div>
                 </div>
             </div>
@@ -58,7 +59,13 @@ export const CreatingHouse = (props) =>{
                     <Input onChange = {value=>{setNome(value.target.value)}} name ="casa" placeholder="Nome da Casa" />
                 </div>
                 <div>
-                    <Button onClick = {handleCreation} type="danger">Criar Casa</Button>
+                {
+                            mutationLoading
+                            ?
+                            <Button type="danger" loading> Criando</Button>
+                            :
+                            <Button onClick = {handleCreation} type="primary">Criar Casa</Button>
+                        }
                 </div>
             </div>
         </div>
