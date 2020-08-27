@@ -53,7 +53,7 @@ export const personalReducer = createReducer(initialState,{
     [updatePerson] : (state, action) => {
         state.personal = action.payload
         state.empty=false
-    console.log("ta chamando")
+    
         return state
     },
     [updateLar] : (state, action) => {
