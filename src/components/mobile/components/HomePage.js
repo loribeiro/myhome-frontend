@@ -1,17 +1,19 @@
 import React,{Suspense,lazy} from 'react';
-import {Button} from "antd";
+import {Button,Image} from "antd";
 import InstallPWA from './PwaInstallButton'
 import Task from '../../images/tasks.png'
 import Clock from '../../images/clock.png'
 import Bag from '../../images/bag_green.png'
 import PWAPrompt from 'react-ios-pwa-prompt'
+import Logo_Branca from "../../images/page1/logo-branca.png"
+
 import  {DownOutlined}  from '@ant-design/icons';
 
 export const FirstArea = (props) => {
     return(
         
         <div className = "HomePage-FirstArea" >
-               
+                
                 <div>
 
                     <h1 style={{color:"white", marginTop:"20vh", marginLeft:"15px", marginRight:"15px"}}>
@@ -31,12 +33,13 @@ export const FirstArea = (props) => {
                      copyShareButtonLabel ="1) Aperte o botão 'Compartilhar' "
                      copyAddHomeButtonLabel = "2) Aperte 'Adicionar a HomeScreen'"
                      permanentlyHideOnDismiss={false}
+                     
                      promptOnVisit={1} timesToShow={3} 
                      />
                 </div>
-                <div style={{marginTop:"50px"}}>
-
-                    <h2 style={{color:"white"}}>myHome</h2>
+                <div >
+                    <Image src={Logo_Branca}/>
+                    
                 </div>
         </div>
     )

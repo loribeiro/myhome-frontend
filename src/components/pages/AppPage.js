@@ -33,11 +33,12 @@ const AppPage = (props) =>{
         return null
     }
     if(error){
-        window.location.href = "/join"
+        //window.location.href = "/join"
     }
     if(data){
+        console.log(data)
         if(data.pessoa[0].lar === null){
-            window.location.href = "/join"
+            //window.location.href = "/join"
         }else{
         data.pessoa.map((info)=>{
             action({type:"UPDATE_PERSON", payload:{
@@ -51,11 +52,14 @@ const AppPage = (props) =>{
             action({type:"UPDATE_LAR",payload:{
                 nome: info.lar.nome,
             }});
-            action({type:"UPDATE_MORADORES",payload:info.lar.pessoaSet.map(p => p)
+            action({type:"UPDATE_MORADORES",payload:info.lar.organizationUsers.map(o => o.pessoaSet.map(p => p))
             })
+           
+            //console.log(info.lar.organizationUsers.map(o => o.pessoaSet.map(p => p)))
             action({type:"UPDATE_TAREFAS",
             payload:info.lar.tarefasSet.map(t => t)
             })
+            console.log(info.lar.tarefasSet.map(t => t))
         })
         }
         return(

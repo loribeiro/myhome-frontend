@@ -13,7 +13,7 @@ export const TopBar = (props) =>{
                             <div  className = 'Grid-Logo' style = {{/* background:props.color */}}>
                                 <div>
                                     <a href= '/'>
-                                        <img src={Logo} width = {"100px"} height = {"50px"} />
+                                        <img src={Logo} width = {"100px"} height = {"38px"} />
                                         
                                     </a>
                                 </div>                               

@@ -70,12 +70,16 @@ const Moradores = (props)=>{
   const onClose = () => {
     setVisible(false);
   };
+  storage.person.moradores.map((info)=>(
+    console.log(info)
+    ))
   return(
       <Card title="Moradores" bordered={true}>
               {storage.person.moradores.map((info)=>(
-                <div key={info.login.id} style={{display:'grid', gridTemplateColumns:"1fr 1fr"}}>
-                  <h3 key={info.login.id}>{info.login.firstName} {info.login.lastName}</h3>
-                  <Button size="small" style={{maxWidth:"80px"}} type="primary" onClick={()=>showDrawer(info)} shape="round">detalhes</Button>
+              
+                <div key={info[0].login.id} style={{display:'grid', gridTemplateColumns:"1fr 1fr"}}>
+                  <h3 key={info[0].login.id}>{info[0].login.firstName} {info[0].login.lastName}</h3>
+                  <Button size="small" style={{maxWidth:"80px"}} type="primary" onClick={()=>showDrawer(info[0])} shape="round">detalhes</Button>
                   <Drawer
                     title="Informações Pessoais"
                     placement="right"
@@ -89,12 +93,13 @@ const Moradores = (props)=>{
                     
                   </Drawer> 
                 </div>
+             
+                
                   //info.map(m=> <h1>{m.id}</h1>)
               )
                   
               )}
         
-             
       </Card>
   )
 }
@@ -129,10 +134,11 @@ export const Tarefas = (props) =>{
   const {refetch} = props
   
   storage.person.tarefas.map(task =>{
+   
     data_table.push({
       key:task.id,
       tarefa: task.tarefa,
-      description:"Responsaveis: "+ task.responsavel.map(p => p.login.firstName+" "+p.login.lastName)
+      description:"Responsaveis: "+ task.responsavel.map(p => p.user.firstName+" "+p.user.lastName)
     },)
   })
     const columns = [
@@ -179,7 +185,7 @@ const AdicionarTarefas = (props) => {
     const {refetch} = props
     storage.person.moradores.map((info)=>
     
-    dataSource.push({value: info.login.firstName +" "+info.login.lastName,id: info.id},)
+    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].id},)
     )
 
     const onFinish = values => {
@@ -276,11 +282,11 @@ export const Bens = (props) =>{
   const data_table = []
  
   storage.person.moradores.map(morador =>{
-    morador.itensSet.map(item=>{
+    morador[0].itensSet.map(item=>{
       data_table.push({
         key:item.id,
         bem: item.objeto,
-        dono:morador.login.firstName+" "+morador.login.lastName,
+        dono:morador[0].login.firstName+" "+morador[0].login.lastName,
         
       },)
     })
@@ -312,7 +318,7 @@ const AdicionarBens = (props) => {
   const dataSource = []
   storage.person.moradores.map((info)=>
     
-    dataSource.push({value: info.login.firstName +" "+info.login.lastName,id: info.id},)
+    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].id},)
     )
   const onFinish = values => {
    

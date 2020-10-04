@@ -1,10 +1,9 @@
 import { ApolloProvider, useMutation } from "@apollo/react-hooks";
 import { AutoComplete, Button, Card, Checkbox, Form, Input, Layout, Select } from 'antd';
-import MaskedInput from 'antd-mask-input';
 import FormItem from "antd/lib/form/FormItem";
 import React, { useEffect, useState } from "react";
 import { client } from "../../../settings";
-import { Create_Person, Login_User_Query } from '../../../Queries';
+import { Accept_ivitation, Login_User_Query } from '../../../Queries';
 import { getTokens, setToken } from '../../../Token';
 
 const { Meta } = Card;
@@ -13,14 +12,14 @@ const InputGroup = Input.Group;
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
 const desc = ['Pessimo', 'Ruin', 'Normal', 'Bom', 'Maravilhoso'];
-export const SubscriptionArea = (props) => {
+export const JoinArea = (props) => {
     return (
-        <ApolloProvider client = {client}>  <FormRegistration2 setLogged = {props.setLogged} alreadyLogged = {props.alreadyLogged}></FormRegistration2>  </ApolloProvider>
+        <ApolloProvider client = {client}>  <FormRegistration2 token = {props.token} setLogged = {props.setLogged} alreadyLogged = {props.alreadyLogged}></FormRegistration2>  </ApolloProvider>
     );
 }
 export const FormRegistration2 = (props) =>{
       const[sendData,
-        {loading: mutationLoading, error: mutationError}, ] = useMutation(Create_Person);
+        {loading: mutationLoading, error: mutationError}, ] = useMutation(Accept_ivitation);
       
       const [inputs, setInputs] = useState({});
       
@@ -37,10 +36,10 @@ export const FormRegistration2 = (props) =>{
           /* if (event) {
              event.preventDefault(); */ 
 
-             if (inputs.password === inputs.password2 && inputs.checkbox === true && ((inputs.sobrenome!=="" || inputs.sobrenome !== undefined) &&(inputs.nome!=="" || inputs.nome !== undefined) &&(inputs.email!=="" || inputs.email !== undefined) && (inputs.senha!=="" || inputs.senha !== undefined) && (inputs.sexo !=="" || inputs.sexo !== undefined) ) ){
+             if (inputs.password === inputs.password2 && inputs.checkbox === true && ((inputs.sobrenome !=="" || inputs.sobrenome !== undefined) &&(inputs.nome!=="" || inputs.nome !== undefined) &&(inputs.email!=="" || inputs.email !== undefined) && (inputs.senha!=="" || inputs.senha !== undefined) && (inputs.sexo !=="" || inputs.sexo !== undefined) ) ){
                 
                 setIsSubscribing(true); 
-                sendData({variables:{nome:inputs.nome, sobrenome: inputs.sobrenome,email:(inputs.email).toLowerCase() , senha: inputs.password , sexo: inputs.sexo}}).catch(err => {})
+                sendData({variables:{nome:inputs.nome, sobrenome: inputs.sobrenome , password: inputs.password , sexo: inputs.sexo, token: props.token}}).catch(err => {})
                  
             }else{
                 
