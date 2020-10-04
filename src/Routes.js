@@ -4,6 +4,8 @@ import { client, client2 } from './settings'; */
 import HomePage from "./components/pages/HomePage"
 import AppPage from "./components/pages/AppPage"
 import {LoadingPageLite} from "./GeneralComponents"
+import { OmitProps } from 'antd/lib/transfer/ListBody';
+const JoinLink =  lazy(()=>import("./components/pages/JoinLink")) 
 //const HomePage= lazy(()=>import("./components/pages/HomePage")) 
 const LoginPage= lazy(()=>import("./components/pages/LoginPage")) 
 const SubscriptionPage= lazy(()=>import("./components/pages/SubscriptionPage"))
@@ -15,7 +17,7 @@ const Routes = {
     "/cadastro": () => <Suspense fallback={<LoadingPageLite/>}><SubscriptionPage/></Suspense> ,
     "/app": () => <AppPage/>,//<Suspense fallback={<LoadingPageLite/>}><AppPage/></Suspense> ,
     "/join": () => <Suspense fallback={<LoadingPageLite/>}><JoinPage/> </Suspense> ,
-    
+    "/join/:token/": ({token}) => <Suspense fallback={<LoadingPageLite/>}><JoinLink token = {token}/> </Suspense> ,
 };
 
 export default Routes;
