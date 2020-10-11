@@ -17,7 +17,7 @@ const Routes = {
     "/cadastro": () => <Suspense fallback={<LoadingPageLite/>}><SubscriptionPage/></Suspense> ,
     "/app": () => <AppPage/>,//<Suspense fallback={<LoadingPageLite/>}><AppPage/></Suspense> ,
     "/join": () => <Suspense fallback={<LoadingPageLite/>}><JoinPage/> </Suspense> ,
-    "/join/:token/": ({token}) => <Suspense fallback={<LoadingPageLite/>}><JoinLink token = {token}/> </Suspense> ,
+    "/invitations/:token/": ({token}) => <Suspense fallback={<LoadingPageLite/>}><JoinLink token = {token}/> </Suspense> ,
 };
 
 export default Routes;

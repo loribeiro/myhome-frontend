@@ -7,7 +7,7 @@ import {isMobile} from 'react-device-detect';
 import { client2 } from "../../../settings";
 import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation } from '@apollo/client';
-import {Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
+import {Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
 import { updateSaude } from '../../../store/reducers/personal_data_reducers';
 import Sider from 'antd/lib/layout/Sider';
 const { TabPane } = Tabs;
@@ -33,7 +33,7 @@ export const VisaoGeral = (props) =>{
     if(isMobile){
         return(
             <div>
-                <Moradores/>
+                <Moradores refetch = {props.refetch}/>
                 <Despesas/>
                 <Tarefas/>
             </div>
@@ -43,7 +43,7 @@ export const VisaoGeral = (props) =>{
         <div className="site-card-wrapper">
             <Row  gutter={{ xs: 1, sm: 16, md: 24}}>
                 <Col span={8}>
-                    <Moradores/>
+                    <Moradores refetch = {props.refetch}/>
                 </Col>
                 <Col span={8}>
                     <Despesas/>
@@ -80,6 +80,7 @@ const Moradores = (props)=>{
                 <div key={info[0].login.id} style={{display:'grid', gridTemplateColumns:"1fr 1fr"}}>
                   <h3 key={info[0].login.id}>{info[0].login.firstName} {info[0].login.lastName}</h3>
                   <Button size="small" style={{maxWidth:"80px"}} type="primary" onClick={()=>showDrawer(info[0])} shape="round">detalhes</Button>
+                  
                   <Drawer
                     title="Informações Pessoais"
                     placement="right"
@@ -99,9 +100,86 @@ const Moradores = (props)=>{
               )
                   
               )}
-        
+              <AddMoradores refetch = {props.refetch}/>
       </Card>
   )
+}
+const AddMoradores = (props) =>{
+  const storage = useSelector(state => state)
+  const [addTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Make_Invitation);
+  const dataSource = []
+  const {refetch} = props
+  storage.person.moradores.map((info)=>
+  
+  dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].id},)
+  )
+
+  const onFinish = values => {
+    values.tasks.map(v => {
+      
+      addTask({ variables: { email:v.email} })
+      
+    })
+    refetch()
+  };
+  
+  const onSelect = (value,info) => {
+      console.log('onSelect', info.id);
+  }
+  if(mutationLoading){
+    return(
+      <div>
+        criando
+      </div>
+    )
+  }
+  return (
+    <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+      <Form.List name="tasks">
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              {fields.map(field => (
+                <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
+                  <Form.Item
+                    {...field}
+                    name={[field.name, 'email']}
+                    fieldKey={[field.fieldKey, 'email']}
+                    rules={[{ required: true, message: 'Faltando e-mail' }]}
+                  >
+                    <Input placeholder="E-mail" />
+                  </Form.Item>
+                  <MinusCircleOutlined
+                    onClick={() => {
+                      remove(field.name);
+                    }}
+                  />
+                </Space>
+              ))}
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add();
+                  }}
+                  block
+                >
+                  <PlusOutlined /> Adicionar Morador
+                </Button>
+              </Form.Item>
+            </div>
+          );
+        }}
+      </Form.List>
+
+      <Form.Item style= {{textAlign:"center"}}>
+        <Button type="primary" htmlType="submit">
+          Salvar
+        </Button>
+      </Form.Item>
+    </Form>
+  );
 }
 const Detalhes = (props)=>{
   if(props.info.login.firstName !== null){

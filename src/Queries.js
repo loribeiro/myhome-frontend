@@ -16,8 +16,8 @@ mutation acceptInvitation($password: String!,$token: String!, $sexo: String!,$no
 `;
 
 export const Make_Invitation = gql `
-mutation makeInvitation($email: String!, $nome: String!, $sobrenome: String!){
-  makeInvitation(email:$email,nome:$nome, sobrenome:$sobrenome){
+mutation makeInvitation($email: String!){
+  makeInvitation(email:$email){
     Lar{
       organizationInvites{
         guid
