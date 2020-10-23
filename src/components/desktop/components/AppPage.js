@@ -263,7 +263,7 @@ const AdicionarTarefas = (props) => {
     const {refetch} = props
     storage.person.moradores.map((info)=>
     
-    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].id},)
+    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].larUser.id},)
     )
 
     const onFinish = values => {
