@@ -36,7 +36,7 @@ export const FormRegistration2 = (props) =>{
           /* if (event) {
              event.preventDefault(); */ 
 
-             if (inputs.password === inputs.password2 && inputs.checkbox === true && ((inputs.sobrenome !=="" || inputs.sobrenome !== undefined) &&(inputs.nome!=="" || inputs.nome !== undefined) &&(inputs.email!=="" || inputs.email !== undefined) && (inputs.senha!=="" || inputs.senha !== undefined) && (inputs.sexo !=="" || inputs.sexo !== undefined) ) ){
+             if (inputs.password === inputs.password2 && inputs.checkbox === true && ((inputs.sobrenome !=="" || inputs.sobrenome !== undefined) &&(inputs.nome!=="" || inputs.nome !== undefined)  && (inputs.senha!=="" || inputs.senha !== undefined) && (inputs.sexo !=="" || inputs.sexo !== undefined) ) ){
                 
                 setIsSubscribing(true); 
                 sendData({variables:{nome:inputs.nome, sobrenome: inputs.sobrenome , password: inputs.password , sexo: inputs.sexo, token: props.token}}).catch(err => {})
@@ -57,7 +57,7 @@ export const FormRegistration2 = (props) =>{
      const handleNext = (event) => {
          if(event){
             event.preventDefault();
-            if (((inputs.sobrenome!=="" && inputs.sobrenome !== undefined) &&(inputs.nome!=="" && inputs.nome !== undefined) &&(inputs.email!=="" && inputs.email !== undefined))){
+            if (((inputs.sobrenome!=="" && inputs.sobrenome !== undefined) &&(inputs.nome!=="" && inputs.nome !== undefined) )){
               setProximo(true)
                 
            }
@@ -129,10 +129,6 @@ export const FormRegistration2 = (props) =>{
                             <Input className = "inputEmail" onChange = {handleInputChange} name = "sobrenome"  placeholder= "Sobrenome"/>
 
                         </Form.Item>             
-                        <Form.Item >
-                            <Input className = "inputEmail" onChange = {handleInputChange} name = "email"  placeholder= "E-mail"/>
-                                {(hasAccount === true && isSubscribing === true) ? <h5 style = {{color:"red", textAlign:"center"}}>Email já cadastrado!</h5> : <div></div>}
-                        </Form.Item>
                         <Form.Item>
 
                             <Button type="danger" style={{ width:"200px"}} shape="round" size="large" onClick={handleNext}>
