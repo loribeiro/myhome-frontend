@@ -103,26 +103,29 @@ query{
         
           pessoaSet{
             id
-        login{
-          id
-          firstName
-          lastName
-        }
-        itensSet{
-          id
-          objeto
-          
-        }
-        saude{
-          alergias
-          contatoEmergencia{
-            nome
-            numero
-          }
-          temPlano
-          plano
-          restricoesAlimentares
-        }
+            larUser{
+              id
+            }
+            login{
+              id
+              firstName
+              lastName
+            }
+            itensSet{
+              id
+              objeto
+              
+            }
+            saude{
+              alergias
+              contatoEmergencia{
+                nome
+                numero
+              }
+              temPlano
+              plano
+              restricoesAlimentares
+            }
           }
         
       }
