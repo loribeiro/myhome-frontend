@@ -1,5 +1,5 @@
 import { ApolloProvider, useMutation } from "@apollo/react-hooks";
-import { AutoComplete, Button, Card, Checkbox, Form, Input, Layout, Select } from 'antd';
+import { AutoComplete, Button, Card, Checkbox, Form, Input, Layout, Select, notification } from 'antd';
 import FormItem from "antd/lib/form/FormItem";
 import React, { useEffect, useState } from "react";
 import { client } from "../../../settings";
@@ -19,7 +19,7 @@ export const JoinArea = (props) => {
 }
 export const FormRegistration2 = (props) =>{
       const[sendData,
-        {loading: mutationLoading, error: mutationError}, ] = useMutation(Accept_ivitation);
+        {loading: mutationLoading, error: mutationError, data: mutationData}, ] = useMutation(Accept_ivitation);
       
       const [inputs, setInputs] = useState({});
       
@@ -102,6 +102,16 @@ export const FormRegistration2 = (props) =>{
             LoginIn({variables:{email:(inputs.email).toLowerCase() , password: inputs.password}}).catch(err => {})
             
        }
+       const openNotification = () => {
+        notification.open({
+          message: 'Informações atualizadas com sucesso!',
+          description:
+            'Agora seus colegas de quarto já podem interagir com você! Realize o login e aproveite nossa plataforma :D',
+          onClick: () => {
+            console.log('Notification Clicked!');
+          },
+        });
+      };
      //if (mutationLoading) return <div>loading</div>;
      /* if(mutationLoading){
          return <h1>Carregando!!</h1>
@@ -111,9 +121,9 @@ export const FormRegistration2 = (props) =>{
         subscribing =false
         hasAccount = true;
      } //return <div>Error: {JSON.stringify(mutationError)}</div>
-    if(data){
-        //
-        setToken(data.tokenAuth);
+    if(mutationData){
+        
+        openNotification()
      }
      //
      return(
@@ -176,12 +186,6 @@ export const FormRegistration2 = (props) =>{
                                         subscribing = true;
                                         handleSubmit();
                                         setInterval(()=>{(props.setLogged)(getTokens())},2000 );
-                                        setTimeout(() => {
-                                            if( inputs.password === inputs.password2){
-                                                
-                                                makingLogin();
-                                            }
-                                        }, 3500); 
                                         }} 
                                     onChange = {handleInputChange} 
                                     htmlType="submit"  
