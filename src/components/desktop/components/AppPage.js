@@ -100,7 +100,13 @@ const Moradores = (props)=>{
               )
                   
               )}
-              <AddMoradores refetch = {props.refetch}/>
+              {
+                storage.person.personal.administrador
+                ? 
+                <AddMoradores refetch = {props.refetch}/>
+                :
+                null
+              }
       </Card>
   )
 }
