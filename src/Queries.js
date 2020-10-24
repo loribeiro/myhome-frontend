@@ -105,6 +105,7 @@ query{
             id
             larUser{
               id
+              isAdmin
             }
             login{
               id
