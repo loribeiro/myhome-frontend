@@ -1,5 +1,16 @@
 import gql from 'graphql-tag';
 
+export const Remove_User_Home = gql `
+mutation RemoveUser($email: String!, $larId: String!){
+  removeUser(usuario: $email, larId: $larId){
+    Lar{
+      id
+    }
+  }
+}
+
+`;
+
 export const Accept_ivitation = gql `
 mutation acceptInvitation($password: String!,$token: String!, $sexo: String!,$nome: String!, $sobrenome: String!){
   acceptInvitation(nome:$nome, sobrenome:$sobrenome, password:$password, sexo:$sexo,token:$token){
@@ -16,13 +27,9 @@ mutation acceptInvitation($password: String!,$token: String!, $sexo: String!,$no
 `;
 
 export const Make_Invitation = gql `
-mutation makeInvitation($email: String!){
-  makeInvitation(email:$email){
-    Lar{
-      organizationInvites{
-        guid
-      }
-    }
+mutation makeInvitation($email: String!, $larId: String!){
+  makeInvitation(email:$email,larId: $larId){
+    Token
   }
 }
 `;
@@ -75,76 +82,82 @@ mutation CreateTarefas($responsavel: String!, $tarefa: String!){
 export const Retrieve_Person =  gql `
 query{
   pessoa{
-    login{
-      isManager
-      sexo{
-        sexo
-      }
-      idade
-      hasHouse
-      firstName
-      lastName
-    }
-    saude{
-      alergias
-      contatoEmergencia{
-        id
-        nome
-        numero
-      }
-      temPlano
-      plano
-      restricoesAlimentares
-    }
-    lar{
-      name
-      slug
-      organizationUsers{
-        
-          pessoaSet{
-            id
-            larUser{
-              id
-              isAdmin
-            }
-            login{
-              id
-              firstName
-              lastName
-            }
-            itensSet{
-              id
-              objeto
-              
-            }
-            saude{
-              alergias
-              contatoEmergencia{
-                nome
-                numero
-              }
-              temPlano
-              plano
-              restricoesAlimentares
-            }
-          }
-        
-      }
-      tarefasSet{
-        id,
-        tarefa,
-        responsavel{
-          id
-          user{
-            id
-            firstName
-            lastName
-          }
-        }
-      }
-    }
     
-  }
+    login{
+     isManager
+     sexo{
+       sexo
+     }
+     idade
+     hasHouse
+     firstName
+     lastName
+   }
+   saude{
+     alergias
+     contatoEmergencia{
+       id
+       nome
+       numero
+     }
+     temPlano
+     plano
+     restricoesAlimentares
+   }
+   
+   larUser{
+     id
+     organization{
+       id
+       name
+     slug
+     organizationUsers{
+       
+         pessoaSet{
+           id
+           larUser{
+             id
+             isAdmin
+           }
+           login{
+             id
+             firstName
+             lastName
+             username
+           }
+           itensSet{
+             id
+             objeto
+             
+           }
+           saude{
+             alergias
+             contatoEmergencia{
+               nome
+               numero
+             }
+             temPlano
+             plano
+             restricoesAlimentares
+           }
+         }
+       
+     }
+     tarefasSet{
+       id,
+       tarefa,
+       responsavel{
+         id
+         user{
+           id
+           firstName
+           lastName
+         }
+       }
+     }
+     }
+   }
+ }
 }
 `;
 export const Create_Bem = gql `
