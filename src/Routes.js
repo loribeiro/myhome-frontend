@@ -11,6 +11,7 @@ const LoginPage= lazy(()=>import("./components/pages/LoginPage"))
 const SubscriptionPage= lazy(()=>import("./components/pages/SubscriptionPage"))
 //const AppPage= lazy(()=>import("./components/pages/AppPage")) 
 const JoinPage= lazy(()=>import("./components/pages/JoinHome")) 
+const JoinLinkExistent = lazy(()=> import("./components/pages/JoinLinkExistent"))
 const Routes = {
     "/": () => <HomePage/>,//{/* <Suspense fallback = {<LoadingPageLite/>}><HomePage/></Suspense> , */}
     "/login": () =><Suspense fallback={<LoadingPageLite/>}><LoginPage/></Suspense> ,
@@ -18,6 +19,7 @@ const Routes = {
     "/app": () => <AppPage/>,//<Suspense fallback={<LoadingPageLite/>}><AppPage/></Suspense> ,
     "/join": () => <Suspense fallback={<LoadingPageLite/>}><JoinPage/> </Suspense> ,
     "/invitations/:token/": ({token}) => <Suspense fallback={<LoadingPageLite/>}><JoinLink token = {token}/> </Suspense> ,
+    "/invitations/old/:token/":({token}) => <Suspense fallback={<LoadingPageLite/>}><JoinLinkExistent token = {token}/> </Suspense>,
 };
 
 export default Routes;
