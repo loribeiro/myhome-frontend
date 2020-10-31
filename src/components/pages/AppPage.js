@@ -37,8 +37,8 @@ const AppPage = (props) =>{
     }
     if(data){
         console.log(data)
-        if(data.pessoa[0].lar === null){
-            //window.location.href = "/join"
+        if(data.pessoa[0].larUser === null){
+            window.location.href = "/join"
         }else{
         data.pessoa.map((info)=>{
             action({type:"UPDATE_PERSON", payload:{
@@ -50,16 +50,17 @@ const AppPage = (props) =>{
                saude: info.saude,
             }});
             action({type:"UPDATE_LAR",payload:{
-                nome: info.lar.nome,
+                nome: info.larUser[0].organization.name,
+                id: info.larUser[0].organization.id,
             }});
-            action({type:"UPDATE_MORADORES",payload:info.lar.organizationUsers.map(o => o.pessoaSet.map(p => p))
+            action({type:"UPDATE_MORADORES",payload:info.larUser[0].organization.organizationUsers.map(o => o.pessoaSet.map(p => p))
             })
            
             //console.log(info.lar.organizationUsers.map(o => o.pessoaSet.map(p => p)))
             action({type:"UPDATE_TAREFAS",
-            payload:info.lar.tarefasSet.map(t => t)
+            payload:info.larUser[0].organization.tarefasSet.map(t => t)
             })
-            console.log(info.lar.tarefasSet.map(t => t))
+            console.log(info.larUser[0].organization.tarefasSet.map(t => t))
         })
         }
         return(
