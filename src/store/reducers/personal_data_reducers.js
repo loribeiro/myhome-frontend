@@ -33,6 +33,7 @@ const initialState = {
         },    
         lar:{
             nome:null,
+            id: null,
         },
         moradores:[],
         tarefas:[],
