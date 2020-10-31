@@ -1,16 +1,33 @@
 import React,{Suspense,lazy, useState, useEffect} from 'react';
 import {Table,Tabs ,Card, Col, Row ,Menu} from 'antd';
-import {Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification} from 'antd';
+import {Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification, Modal} from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
 import { client2 } from "../../../settings";
 import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation } from '@apollo/client';
-import {Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
+import {Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
 import { updateSaude } from '../../../store/reducers/personal_data_reducers';
 import Sider from 'antd/lib/layout/Sider';
+import { OmitProps } from 'antd/lib/transfer/ListBody';
+import {
+  EmailShareButton,
+  EmailIcon,
+  FacebookShareButton,
+  FacebookIcon,
+  TelegramShareButton,
+  TelegramIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  ViberShareButton,
+  ViberIcon,
+  WhatsappShareButton,
+  WhatsappIcon
+} from "react-share";
+
 const { TabPane } = Tabs;
+
 
 
 export const VisaoGeral = (props) =>{
@@ -70,9 +87,9 @@ const Moradores = (props)=>{
   const onClose = () => {
     setVisible(false);
   };
-  storage.person.moradores.map((info)=>(
-    console.log(info)
-    ))
+  //storage.person.moradores.map((info)=>(
+  //  console.log(info)
+  //  ))
   return(
       <Card title="Moradores" bordered={true}>
               {storage.person.moradores.map((info)=>(
@@ -90,7 +107,7 @@ const Moradores = (props)=>{
                     width={320}
                     destroyOnClose
                   >
-                    <Detalhes info = {informacoes}/>
+                    <Detalhes refetch = {props.refetch} info = {informacoes} admin = {storage.person.personal.administrador}/>
                     
                   </Drawer> 
                 </div>
@@ -117,13 +134,13 @@ const AddMoradores = (props) =>{
   const {refetch} = props
   storage.person.moradores.map((info)=>
   
-  dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].id},)
+  dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].larUser[0].id},)
   )
-
+  
   const onFinish = values => {
     values.tasks.map(v => {
       
-      addTask({ variables: { email:v.email} })
+      addTask({ variables: { email:v.email.toLowerCase(), larId: storage.person.lar.id} })
       
     })
     refetch()
@@ -131,6 +148,53 @@ const AddMoradores = (props) =>{
   
   const onSelect = (value,info) => {
       console.log('onSelect', info.id);
+  }
+  if(data){
+    var QRCode = require('qrcode.react');
+    const modal = Modal.success({
+      title: 'Agora é só compartilhar o convite!',
+      content: <div style={{textAlign:"center", display:"grid", gridAutoRows:"1fr 1fr"}}>
+        <div>
+          <h2 style={{textAlign:"left"}}>- Por QrCode:</h2>
+          <QRCode value={data.makeInvitation.Token} />
+        </div>
+        <div>
+          <h2 style={{textAlign:"left"}}>- Ou pelas rede sociais:</h2>
+        
+          <WhatsappShareButton  url={data.makeInvitation.Token} title="Faça parte do nosso lar!">
+            <div style={{display:"grid", gridTemplateRows:"1fr 1fr"}}>
+              <div>
+
+                <WhatsappIcon size={42} round /> 
+              </div>
+              <div>
+                Whatsapp
+              </div>
+            </div>
+          </WhatsappShareButton>
+          <EmailShareButton  style={{marginLeft:"30px"}} url={data.makeInvitation.Token} 
+          subject={"Convite para participar do lar " + storage.person.lar.nome} 
+          body={"Você foi convidado para participar do lar "+storage.person.lar.nome +" por " 
+          + storage.person.personal.nome +" "+ storage.person.personal.sobrenome + 
+          ". Acesse o link abaixo e comece a interagir com seus colegas"} 
+          title="Faça parte do nosso lar!">
+            <div style={{display:"grid", gridTemplateRows:"1fr 1fr"}}>
+              <div>
+
+                <EmailIcon  size={42} round> </EmailIcon> 
+                
+              </div>
+              <div>
+                Email
+              </div>
+            </div>
+          </EmailShareButton>
+        </div>
+        </div> ,
+    });
+    //modal.destroy();
+    console.log(data.makeInvitation.Token)
+    
   }
   if(mutationLoading){
     return(
@@ -181,13 +245,41 @@ const AddMoradores = (props) =>{
 
       <Form.Item style= {{textAlign:"center"}}>
         <Button type="primary" htmlType="submit">
-          Salvar
+        Gerar Convite
         </Button>
       </Form.Item>
+    
+
+     {/* {
+       data
+       ?
+       <QrCodePresenter token = {data.makeInvitation.Token}/>
+       :
+       null
+     } */}
     </Form>
   );
 }
+const QrCodePresenter = (props) =>{
+  var QRCode = require('qrcode.react');
+  return(
+    <Modal
+    title="Basic Modal"
+    visible={true}
+    onOk={()=> false}
+    onCancel={()=>false}
+    destroyOnClose
+  >
+  <QRCode value={props.token} />
+  </Modal>
+  )
+}
 const Detalhes = (props)=>{
+  const [removeUser, { loading: mutationLoading, error: mutationError,data }] = useMutation(Remove_User_Home);
+  const {refetch} = props
+  if(data){
+    refetch()
+  }
   if(props.info.login.firstName !== null){
     
     return(
@@ -205,6 +297,18 @@ const Detalhes = (props)=>{
             <Divider></Divider>
           </div>
         ))}
+        {
+          props.admin
+          ?
+          <div style={{textAlign:"center"}}>
+            <Button onClick = {()=>{
+              removeUser({variables:{email:props.info.login.username}})
+              
+            }} shape="round" type="danger">Remover da Casa</Button>
+          </div>
+          :
+          null
+        }
       </div>
     )
   }
@@ -268,8 +372,7 @@ const AdicionarTarefas = (props) => {
     const dataSource = []
     const {refetch} = props
     storage.person.moradores.map((info)=>
-    
-    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].larUser.id},)
+    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].larUser[0].id},)
     )
 
     const onFinish = values => {
@@ -277,6 +380,7 @@ const AdicionarTarefas = (props) => {
         var result = dataSource.find(obj => {
           return obj.value === v.responsible
         })
+        
         addTask({ variables: { responsavel:result.id, tarefa:v.task} })
         
       })
