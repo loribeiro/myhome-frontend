@@ -10,7 +10,15 @@ mutation RemoveUser($email: String!, $larId: String!){
 }
 
 `;
-
+export const Accept_invitation_Existent_User = gql `
+mutation ExistentUserInvitation($token: String!){
+  acceptInvitationExistentUser(token: $token){
+    Pessoa{
+      id
+    }
+  }
+}
+`;
 export const Accept_ivitation = gql `
 mutation acceptInvitation($password: String!,$token: String!, $sexo: String!,$nome: String!, $sobrenome: String!){
   acceptInvitation(nome:$nome, sobrenome:$sobrenome, password:$password, sexo:$sexo,token:$token){
