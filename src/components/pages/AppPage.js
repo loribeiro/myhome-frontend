@@ -37,7 +37,7 @@ const AppPage = (props) =>{
     }
     if(data){
         console.log(data)
-        if(data.pessoa[0].larUser === null){
+        if(data.pessoa[0].larUser[0] === undefined){
             window.location.href = "/join"
         }else{
         data.pessoa.map((info)=>{
