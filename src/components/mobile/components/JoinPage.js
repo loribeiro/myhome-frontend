@@ -5,7 +5,7 @@ import { Create_Home } from '../../../Queries';
 import { isMobile} from 'react-device-detect';
 import { gql, useMutation} from '@apollo/client';
 import {LoadingPageLite} from "../../../GeneralComponents"
-
+import QrReader from 'react-qr-reader'
 export const CreatingHouse = (props) =>{
     const [nome, setNome] = useState("")
     const[CreateHome,
@@ -72,18 +72,30 @@ export const CreatingHouse = (props) =>{
     )
 }
 export const JoingHouse = (props) =>{
+    const [result, setResult] = useState("")
+    const handleScan = data => {
+        if (data) {
+            window.location.href = data
+          //setResult(data)
+        }
+      }
+     const handleError = err => {
+        console.error(err)
+      }
     if(isMobile){
         return(
             <div style={{marginTop:"5vh"}}>
     
-                <h1 >Entre em um lar já existente</h1>
+                <h1 >Entre em um lar já existente usando um QRCode</h1>
                 <div style={{display:"grid", gridTemplateColumns:"0.95fr 0.05fr"}}>
-                    <div>
-                        <Input placeholder="Codigo da Casa" />
-                    </div>
-                    <div>
-                        <Button type="primary">Entrar em uma Casa</Button>
-                    </div>
+                <QrReader
+                        delay={300}
+                        onError={handleError}
+                        onScan={handleScan}
+                        style={{ width: '100%' }}
+                        />
+                        <p>{result}</p>
+                
                 </div>
             </div>
         )
@@ -91,14 +103,15 @@ export const JoingHouse = (props) =>{
     return(
         <div style={{marginTop:"5vh", textAlign:"center"}}>
 
-            <h1 style={{color:"white"}}>Entre em um lar já existente</h1>
+            <h1 style={{color:"white"}}>Entre em um lar já existente usando um QRCode</h1>
             <div style={{display:"grid", gridTemplateColumns:"0.95fr 0.05fr"}}>
-                <div>
-                    <Input placeholder="Codigo da Casa" />
-                </div>
-                <div>
-                    <Button type="danger">Entrar em uma Casa</Button>
-                </div>
+                    <QrReader
+                        delay={300}
+                        onError={handleError}
+                        onScan={handleScan}
+                        style={{ width: '100%' }}
+                        />
+                        <p>{result}</p>
             </div>
         </div>
     )
