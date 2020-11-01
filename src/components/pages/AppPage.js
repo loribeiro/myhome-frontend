@@ -1,6 +1,6 @@
 import React,{Suspense,lazy, useState, useEffect} from 'react';
 import { Alert, Button, Card, Collapse, Input, Layout, Menu, message, Popconfirm, Result, Select, Tabs, Tooltip, Transfer, Upload } from 'antd';
-import {LayoutOutlined ,ShoppingCartOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined,  UserOutlined } from '@ant-design/icons';
+import {UsergroupAddOutlined,LayoutOutlined ,ShoppingCartOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined,  UserOutlined } from '@ant-design/icons';
 import {deleteTokens,getTokens} from "../../Token"
 import { useDispatch, useSelector } from 'react-redux';
 import {Get_Home_ID, Retrieve_Person} from "../../Queries"
@@ -9,6 +9,8 @@ import { gql, useQuery} from '@apollo/client';
 import {TopBar2} from "../desktop/components/TopBar"
 import {VisaoGeral,Tarefas,DadosSaude,Bens} from "../desktop/components/AppPage"
 import { isMobile, isTablet } from 'react-device-detect';
+import {JoinArea} from "../mobile/JoinPage"
+import {CreatingHouse,JoingHouse} from "../mobile/components/JoinPage"
 import PWAPrompt from 'react-ios-pwa-prompt'
 
 const { TextArea } = Input;
@@ -112,6 +114,9 @@ const AppPageLogic = (props) =>{
                 <Menu.Item key="6" > 
                     <SettingOutlined /> Emergência
                 </Menu.Item>
+                <Menu.Item key="7" > 
+                <UsergroupAddOutlined /> Entrar em novo lar
+                </Menu.Item>
                 <Menu.Item onClick={()=>{deleteTokens(); setLogged(false)}}>
                     Sair
                 </Menu.Item>
@@ -184,6 +189,26 @@ const ContentAbstraction =(props)=>{
             <div style={{marginTop:"2vh", textAlign:"center"}}>
                 <h1>Atualize suas informações de saúde</h1>
                 <DadosSaude refetch = {props.refetch}/>
+            </div>
+        )
+    }
+    if(props.opcao === "7"){
+        return(
+            <div>
+
+                {
+                    isMobile
+                        ?
+                        <div>
+                        <CreatingHouse/>
+                        <JoingHouse/>
+                    </div>
+                    :
+                    <div>
+                        <CreatingHouse/>
+                        <JoingHouse/>
+                    </div>
+                }
             </div>
         )
     }
