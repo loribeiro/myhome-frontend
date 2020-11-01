@@ -12,45 +12,46 @@ const JoinLinkExistentPageMobile = (props) => {
     const [acceptInv, { loading: mutationLoading, error: mutationError,data }] = useMutation(Accept_invitation_Existent_User);
     const[alreadyLogged,setLogged] = useState(getTokens())
     if(alreadyLogged){
-        acceptInv({variables:{token:props.token}})
-        if(mutationLoading){
-            return(
-                <LoadingPageLite/>
-            )
-        }
-        if(mutationError){
-            return(
-                <Result
-                    status="error"
-                    title="Falha na autenticacao do link"
-                    subTitle="Por favor peca para o admistrador do seu lar gerar um novo link"
-                    extra={[
-                    <Button href="/" type="primary" key="console">
-                       Pagina inicial
-                    </Button>,
-                    
-                    ]}
-                >
-                    
-                </Result>
-            )
-        }
-        if(data){
-            return(
-                <Result
-                    status="success"
-                    title="Sua solicitacao foi completada com sucesso!"
-                    subTitle="Agora voce ja tem acesso ao novo lar!"
-                    extra={[
-                    <Button type="primary" key="console">
-                        Voltar para o App
-                    </Button>,
-                    
-                    ]}
-                />
-            )
-        }
-    }else{
+        acceptInv({variables:{token:props.token}}).catch(err =>console.log(err))
+       
+    }
+    if(mutationLoading){
+        return(
+            <LoadingPageLite/>
+        )
+    }
+    if(mutationError){
+        return(
+            <Result
+                status="error"
+                title="Falha na autenticacao do link"
+                subTitle="Por favor peca para o admistrador do seu lar gerar um novo link"
+                extra={[
+                <Button href="/app" type="primary" key="console">
+                   Voltar ao App
+                </Button>,
+                
+                ]}
+            >
+                
+            </Result>
+        )
+    }
+    if(data){
+        return(
+            <Result
+                status="success"
+                title="Sua solicitacao foi completada com sucesso!"
+                subTitle="Agora voce ja tem acesso ao novo lar!"
+                extra={[
+                <Button href="/app" type="primary" key="console">
+                    Voltar para o App
+                </Button>,
+                
+                ]}
+            />
+        )
+    }
         return(
             <div style={{textAlign:"center"}}>
                 <h1>Quase lá!</h1>
@@ -58,7 +59,7 @@ const JoinLinkExistentPageMobile = (props) => {
                 <HorizontalLoginForm/>
             </div>
         )
-    }
+    
     
     
 }
