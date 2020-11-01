@@ -1,5 +1,5 @@
 import { ApolloProvider, useMutation } from "@apollo/react-hooks";
-import { AutoComplete, Button, Card, Checkbox, Form, Input, Layout, Select, notification } from 'antd';
+import { Result,AutoComplete, Button, Card, Checkbox, Form, Input, Layout, Select, notification } from 'antd';
 import FormItem from "antd/lib/form/FormItem";
 import React, { useEffect, useState } from "react";
 import { client } from "../../../settings";
@@ -120,10 +120,37 @@ export const FormRegistration2 = (props) =>{
          //
         subscribing =false
         hasAccount = true;
+        return(
+            <Result
+                status="error"
+                title="Falha na autenticacao do link"
+                subTitle="Por favor peca para o admistrador do seu lar gerar um novo link"
+                extra={[
+                <Button href="/app" type="primary" key="console">
+                   Voltar ao App
+                </Button>,
+                
+                ]}
+            >
+                
+            </Result>
+        )
      } //return <div>Error: {JSON.stringify(mutationError)}</div>
     if(mutationData){
-        
         openNotification()
+        return(
+            <Result
+                status="success"
+                title="Sua solicitacao foi completada com sucesso!"
+                subTitle="Agora voce ja tem acesso ao novo lar!"
+                extra={[
+                <Button href="/login" type="primary" key="console">
+                    Faca o Login
+                </Button>,
+                
+                ]}
+            />
+        )
      }
      //
      return(
