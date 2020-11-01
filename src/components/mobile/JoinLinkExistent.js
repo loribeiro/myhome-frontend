@@ -12,51 +12,61 @@ const JoinLinkExistentPageMobile = (props) => {
     const [acceptInv, { loading: mutationLoading, error: mutationError,data }] = useMutation(Accept_invitation_Existent_User);
     const[alreadyLogged,setLogged] = useState(getTokens())
     if(alreadyLogged){
-        acceptInv({variables:{token:props.token}}).catch(err =>console.log(err))
-       
+        if(mutationLoading){
+            return(
+                <LoadingPageLite/>
+            )
+        }
+        if(mutationError){
+            return(
+                <Result
+                    status="error"
+                    title="Falha na autenticacao do link"
+                    subTitle="Por favor peca para o admistrador do seu lar gerar um novo link"
+                    extra={[
+                    <Button href="/app" type="primary" key="console">
+                       Voltar ao App
+                    </Button>,
+                    
+                    ]}
+                >
+                    
+                </Result>
+            )
+        }
+        if(data){
+            return(
+                <Result
+                    status="success"
+                    title="Sua solicitacao foi completada com sucesso!"
+                    subTitle="Agora voce ja tem acesso ao novo lar!"
+                    extra={[
+                    <Button href="/app" type="primary" key="console">
+                        Voltar para o App
+                    </Button>,
+                    
+                    ]}
+                />
+            )
+        }
+       return(
+           <div style={{textAlign:"center"}}>
+               <h1>Deseja aceitar este convite?</h1>
+               <Button onClick={()=>{
+                    acceptInv({variables:{token:props.token}}).catch(err =>console.log(err))
+
+               }} type="primary">
+                   Aceitar
+               </Button>
+           </div>
+       )
     }
-    if(mutationLoading){
-        return(
-            <LoadingPageLite/>
-        )
-    }
-    if(mutationError){
-        return(
-            <Result
-                status="error"
-                title="Falha na autenticacao do link"
-                subTitle="Por favor peca para o admistrador do seu lar gerar um novo link"
-                extra={[
-                <Button href="/app" type="primary" key="console">
-                   Voltar ao App
-                </Button>,
-                
-                ]}
-            >
-                
-            </Result>
-        )
-    }
-    if(data){
-        return(
-            <Result
-                status="success"
-                title="Sua solicitacao foi completada com sucesso!"
-                subTitle="Agora voce ja tem acesso ao novo lar!"
-                extra={[
-                <Button href="/app" type="primary" key="console">
-                    Voltar para o App
-                </Button>,
-                
-                ]}
-            />
-        )
-    }
+    
         return(
             <div style={{textAlign:"center"}}>
                 <h1>Quase lá!</h1>
                 <h2>Faca o login para entrar no novo lar.</h2>
-                <HorizontalLoginForm/>
+                <HorizontalLoginForm link={"nao"} setLogged={setLogged}/>
             </div>
         )
     
