@@ -3,8 +3,8 @@ import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Login_User_Query } from '../../../Queries';
 import { useMutation } from '@apollo/client';
-import { setToken } from '../../../Token';
-export const HorizontalLoginForm = () => {
+import { setToken, getTokens } from '../../../Token';
+export const HorizontalLoginForm = (props) => {
   const [form] = Form.useForm();
   const[LoginIn,
     { data,error,loading}, ] = useMutation(Login_User_Query);
@@ -21,7 +21,11 @@ export const HorizontalLoginForm = () => {
   };
   if(data){
     setToken(data.tokenAuth);
-    window.location.href = "/app"
+    if(props.link){
+      (props.setLogged)(getTokens())
+    }else{
+      window.location.href = "/app"
+    }
   }
   
   return (
