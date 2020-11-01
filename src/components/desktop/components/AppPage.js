@@ -275,6 +275,7 @@ const QrCodePresenter = (props) =>{
   )
 }
 const Detalhes = (props)=>{
+  const storage = useSelector(state => state)
   const [removeUser, { loading: mutationLoading, error: mutationError,data }] = useMutation(Remove_User_Home);
   const {refetch} = props
   if(data){
@@ -302,7 +303,7 @@ const Detalhes = (props)=>{
           ?
           <div style={{textAlign:"center"}}>
             <Button onClick = {()=>{
-              removeUser({variables:{email:props.info.login.username}})
+              removeUser({variables:{email:props.info.login.username, larId:storage.person.lar.id}})
               
             }} shape="round" type="danger">Remover da Casa</Button>
           </div>
