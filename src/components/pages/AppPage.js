@@ -1,6 +1,6 @@
 import React,{Suspense,lazy, useState, useEffect} from 'react';
-import { Alert, Button, Card, Collapse, Input, Layout, Menu, message, Popconfirm, Result, Select, Tabs, Tooltip, Transfer, Upload } from 'antd';
-import {UsergroupAddOutlined,LayoutOutlined ,ShoppingCartOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined,  UserOutlined } from '@ant-design/icons';
+import {Affix, Drawer,Alert, Button, Card, Collapse, Input, Layout, Menu, message, Popconfirm, Result, Select, Tabs, Tooltip, Transfer, Upload } from 'antd';
+import {UsergroupAddOutlined,LayoutOutlined ,EllipsisOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined,  UserOutlined } from '@ant-design/icons';
 import {deleteTokens,getTokens} from "../../Token"
 import { useDispatch, useSelector } from 'react-redux';
 import {Get_Home_ID, Retrieve_Person} from "../../Queries"
@@ -12,6 +12,8 @@ import { isMobile, isTablet } from 'react-device-detect';
 import {JoinArea} from "../mobile/JoinPage"
 import {CreatingHouse,JoingHouse} from "../mobile/components/JoinPage"
 import PWAPrompt from 'react-ios-pwa-prompt'
+import { NavBar, Icon } from 'antd-mobile';
+
 
 const { TextArea } = Input;
 const { Header, Content, Footer, Sider } = Layout;
@@ -78,24 +80,45 @@ export default AppPage;
 const AppPageLogic = (props) =>{
     const [opcao, setOpcao] = useState(1)
     const [logged, setLogged] = useState(getTokens())
+    const [visible, setVisible] = useState(false);
+
+    const showDrawer = () => {
+        setVisible(true);
+      };
+      const onClose = () => {
+        setVisible(false);
+      };
     if(logged === false){
         window.location.href = "/login"
     }
+    
     return (
         <Layout  style={{ minHeight: '100vh' }}>
-            <Sider
-            breakpoint="lg"
-            collapsedWidth="0"
-            onBreakpoint={broken => {
-                //console.log(broken);
-            }}
-            onCollapse={(collapsed, type) => {
-                //console.log(collapsed, type);
-            }}
-            style={{backgroundColor:"white"}}
-            >
-            <div style={{backgroundColor:"white"}} className="logo" />
-            <Menu style={{marginTop:"10vh"}} theme="ligth" mode="inline"  onSelect={(indice)=>{setOpcao(indice.key); }} defaultSelectedKeys={['1']}>
+            {
+                isMobile
+                ?
+                <>
+                <div>
+                    
+                <Affix offsetTop={0}>
+                    <NavBar
+                        style={{backgroundColor:"white"}}
+                        onLeftClick={() =>showDrawer()}
+                        icon = {<EllipsisOutlined  style={{textAlign:"left", fontSize:"32px"}} />}
+                        
+                        >
+                        
+                        </NavBar>
+                </Affix>
+                </div>
+                <Drawer
+                  title="myHome"
+                  placement="left"
+                  closable={false}
+                  onClose={onClose}
+                  visible={visible}
+                >
+                      <Menu style={{marginTop:"10vh"}} theme="ligth" mode="inline"  onSelect={(indice)=>{setOpcao(indice.key); }} defaultSelectedKeys={['1']}>
                 <Menu.Item key="1"  >
                     <LayoutOutlined />  Visão Geral
                 </Menu.Item>
@@ -121,12 +144,57 @@ const AppPageLogic = (props) =>{
                     Sair
                 </Menu.Item>
             </Menu>
-            </Sider>
+                 
+                </Drawer>
+              </>
+              :
+              <Sider
+              breakpoint="lg"
+              collapsedWidth="0"
+              onBreakpoint={broken => {
+                  //console.log(broken);
+              }}
+              onCollapse={(collapsed, type) => {
+                  //console.log(collapsed, type);
+              }}
+              style={{backgroundColor:"white"}}
+              >
+              <div style={{backgroundColor:"white"}} className="logo" />
+              <Menu style={{marginTop:"10vh"}} theme="ligth" mode="inline"  onSelect={(indice)=>{setOpcao(indice.key); }} defaultSelectedKeys={['1']}>
+                  <Menu.Item key="1"  >
+                      <LayoutOutlined />  Visão Geral
+                  </Menu.Item>
+                  <Menu.Item key="2"  >
+                      <UnorderedListOutlined /> Tarefas 
+                  </Menu.Item>
+                  {/* <Menu.Item key="3" >
+                      <ShoppingCartOutlined /> Compras
+                  </Menu.Item> */}
+                  <Menu.Item key="4" > 
+                      <BarcodeOutlined /> Contas 
+                  </Menu.Item>
+                  <Menu.Item key="5" > 
+                      <PieChartOutlined/> Inventário
+                  </Menu.Item>
+                  <Menu.Item key="6" > 
+                      <SettingOutlined /> Emergência
+                  </Menu.Item>
+                  <Menu.Item key="7" > 
+                  <UsergroupAddOutlined /> Entrar em novo lar
+                  </Menu.Item>
+                  <Menu.Item onClick={()=>{deleteTokens(); setLogged(false)}}>
+                      Sair
+                  </Menu.Item>
+              </Menu>
+              </Sider>
+            }
+           
             <Layout>
             {
                 isMobile
                 ?
-                <TopBar2/>
+                null
+                //<TopBar2/>
                 :
                 null
             }
