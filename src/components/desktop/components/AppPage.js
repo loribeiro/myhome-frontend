@@ -412,7 +412,7 @@ const AdicionarTarefas = (props) => {
                       fieldKey={[field.fieldKey, 'task']}
                       rules={[{ required: true, message: 'Faltando Tarefa' }]}
                     >
-                      <Input placeholder="Tarefa" />
+                      <Input style={isMobile? { width: "35vw"}: {width:300}} placeholder="Tarefa" />
                     </Form.Item>
                     <Form.Item
                       {...field}
@@ -422,7 +422,7 @@ const AdicionarTarefas = (props) => {
                     >
                       <AutoComplete
                             options={dataSource}
-                            style={{ width: 200 }}
+                            style={isMobile? { width: "35vw"}: {width:300}}
                             onSelect={onSelect}
                             filterOption={(inputValue, option) =>
                             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
@@ -547,7 +547,7 @@ const AdicionarBens = (props) => {
                   fieldKey={[field.fieldKey, 'bem']}
                   rules={[{ required: true, message: 'Faltando Adicionar Bem' }]}
                 >
-                  <Input placeholder="Bem" />
+                  <Input style={isMobile? { width: "35vw"}: {width:300}} placeholder="Bem" />
                 </Form.Item>
                 
                 <Form.Item
@@ -558,7 +558,7 @@ const AdicionarBens = (props) => {
                 >
                   <AutoComplete
                         options={dataSource}
-                        style={{ width: 200 }}
+                        style={isMobile? { width: "35vw"}: {width:300}}
                         onSelect={onSelect}
                         filterOption={(inputValue, option) =>
                         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
