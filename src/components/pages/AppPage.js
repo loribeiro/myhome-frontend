@@ -1,18 +1,17 @@
-import React,{Suspense,lazy, useState, useEffect} from 'react';
-import {Affix, Drawer,Alert, Button, Card, Collapse, Input, Layout, Menu, message, Popconfirm, Result, Select, Tabs, Tooltip, Transfer, Upload } from 'antd';
-import {UsergroupAddOutlined,LayoutOutlined ,EllipsisOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined,  UserOutlined } from '@ant-design/icons';
+import React,{ useState} from 'react';
+import {Affix, Drawer, Collapse, Input, Layout, Menu,  Select, Tabs } from 'antd';
+import {UsergroupAddOutlined,LayoutOutlined ,EllipsisOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined} from '@ant-design/icons';
 import {deleteTokens,getTokens} from "../../Token"
-import { useDispatch, useSelector } from 'react-redux';
-import {Get_Home_ID, Retrieve_Person} from "../../Queries"
-import { client2 } from "../../settings";
-import { gql, useQuery} from '@apollo/client';
-import {TopBar2} from "../desktop/components/TopBar"
+import { useDispatch } from 'react-redux';
+import { Retrieve_Person} from "../../Queries"
+
+import { useQuery} from '@apollo/client';
+
 import {VisaoGeral,Tarefas,DadosSaude,Bens} from "../desktop/components/AppPage"
-import { isMobile, isTablet } from 'react-device-detect';
-import {JoinArea} from "../mobile/JoinPage"
+import { isMobile} from 'react-device-detect';
 import {CreatingHouse,JoingHouse} from "../mobile/components/JoinPage"
 import PWAPrompt from 'react-ios-pwa-prompt'
-import { NavBar, Icon } from 'antd-mobile';
+import { NavBar} from 'antd-mobile';
 
 
 const { TextArea } = Input;
