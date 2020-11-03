@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, notification } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Login_User_Query } from '../../../Queries';
 import { useMutation } from '@apollo/client';
@@ -14,10 +14,19 @@ export const HorizontalLoginForm = (props) => {
   useEffect(() => {
     forceUpdate({});
   }, []);
-
+  const openNotification = () => {
+    notification.open({
+      message: 'Email ou senha errados',
+      description:
+        'Verifique se seu email ou senha foram digitados corretamente',
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+  }
   const onFinish = values => {
     console.log('Finish:', values);
-    LoginIn({variables:{email:(values.username).toLowerCase() , password: values.password}}).catch(err => console.log(err))
+    LoginIn({variables:{email:(values.username).toLowerCase() , password: values.password}}).catch(err => openNotification())
   };
   if(data){
     setToken(data.tokenAuth);
@@ -27,6 +36,7 @@ export const HorizontalLoginForm = (props) => {
       window.location.href = "/app"
     }
   }
+  
   
   return (
     <Form form={form} name="horizontal_login" layout="inline" onFinish={onFinish}>
@@ -69,4 +79,5 @@ export const HorizontalLoginForm = (props) => {
       </Form.Item>
     </Form>
   );
-};
+}
+

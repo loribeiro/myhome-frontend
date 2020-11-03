@@ -1,5 +1,5 @@
 import React,{Suspense,lazy, useState} from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, notification } from 'antd';
 import { client } from "../../../settings";
 import { ApolloProvider, useMutation } from "@apollo/react-hooks";
 import { Login_User_Query } from '../../../Queries';
@@ -24,13 +24,22 @@ const Login = () => {
   const[LoginIn,
     { data, loading}, ] = useMutation(Login_User_Query);
   const[entrando, setEntrando] = useState(false)
-
+  const openNotification = () => {
+    notification.open({
+      message: 'Email ou senha errados',
+      description:
+        'Verifique se seu email ou senha foram digitados corretamente',
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
+  }
   const onFinish = (event) => {
     
     console.log('Success:', event);
     setEntrando(true)
     
-    LoginIn({variables:{email:(event.username).toLowerCase() , password: event.password}}).catch(err => {setEntrando(false)})
+    LoginIn({variables:{email:(event.username).toLowerCase() , password: event.password}}).catch(err => {setEntrando(false); openNotification();})
   };
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);
@@ -81,19 +90,13 @@ const Login = () => {
                   Entrar
                 </Button>
                 :
-                null
+                <Button type="primary" shape="round" size="large" loading>
+                Entrando
+              </Button>
           }
           </Form.Item>
     </Form>
-          {
-            entrando === true
-            ?
-            <Button type="primary" style={{textAlign:"center", width:"200px"}} shape="round" size="large" loading>
-              Entrando
-            </Button>
-            :
-            null
-          }
+          
     </div>
     
 </div>
