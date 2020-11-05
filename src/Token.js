@@ -27,6 +27,19 @@ export function getTokens() {
 export function deleteTokens() {
     localStorage.removeItem(AUTH_TOKEN);
     localStorage.removeItem(AUTH_DATE);
+    deleteUserIndex()
+}
+
+export function setUserIndex(index){
+    localStorage.setItem('index-user', JSON.stringify(index))
+}
+
+export function getUserIndex(){
+    return JSON.parse(localStorage.getItem('index-user'))
+}
+
+export function deleteUserIndex() {
+    localStorage.removeItem('index-user')
 }
 
 function setDateToken() {
