@@ -1,13 +1,13 @@
 import React,{ useState} from 'react';
-import {Affix, Drawer, Collapse, Input, Layout, Menu,  Select, Tabs } from 'antd';
-import {UsergroupAddOutlined,LayoutOutlined ,EllipsisOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined} from '@ant-design/icons';
-import {deleteTokens,getTokens} from "../../Token"
+import {Affix, Drawer, Collapse, Input, Layout, Menu,  Select, Tabs,Avatar } from 'antd';
+import {HeartTwoTone,UserOutlined,UsergroupAddOutlined,LayoutOutlined ,EllipsisOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined} from '@ant-design/icons';
+import {deleteTokens,getTokens, getUserIndex, setUserIndex} from "../../Token"
 import { useDispatch } from 'react-redux';
 import { Retrieve_Person} from "../../Queries"
-
+import {ChangeUser} from "../desktop/ChangeUser"
 import { useQuery} from '@apollo/client';
 
-import {VisaoGeral,Tarefas,DadosSaude,Bens} from "../desktop/components/AppPage"
+import {VisaoGeral,Tarefas,DadosSaude,Bens, Configuracoes} from "../desktop/components/AppPage"
 import { isMobile} from 'react-device-detect';
 import {CreatingHouse,JoingHouse} from "../mobile/components/JoinPage"
 import PWAPrompt from 'react-ios-pwa-prompt'
@@ -24,7 +24,7 @@ const { TabPane } = Tabs;
 
 const AppPage = (props) =>{
     const { loading, error, data, refetch } = useQuery(Retrieve_Person);
-    
+    const [index, setIndex] = useState(getUserIndex())
     //const storage = useSelector(state => state)
     const action = useDispatch()
     const logged = getTokens()
@@ -42,33 +42,43 @@ const AppPage = (props) =>{
         console.log(data)
         if(data.pessoa[0].larUser[0] === undefined){
             window.location.href = "/join"
-        }else{
-        data.pessoa.map((info)=>{
-            action({type:"UPDATE_PERSON", payload:{
-               nome:info.login.firstName,
-               sobrenome:info.login.lastName,
-               idade:info.login.idade,
-               administrador:info.login.isManager,
-               sexo: info.login.sexo.sexo,
-               saude: info.saude,
-            }});
-            action({type:"UPDATE_LAR",payload:{
-                nome: info.larUser[0].organization.name,
-                id: info.larUser[0].organization.id,
-            }});
-            action({type:"UPDATE_MORADORES",payload:info.larUser[0].organization.organizationUsers.map(o => o.pessoaSet.map(p => p))
-            })
-           
-            //console.log(info.lar.organizationUsers.map(o => o.pessoaSet.map(p => p)))
-            action({type:"UPDATE_TAREFAS",
-            payload:info.larUser[0].organization.tarefasSet.map(t => t)
-            })
-            console.log(info.larUser[0].organization.tarefasSet.map(t => t))
-        })
         }
-        return(
-            <AppPageLogic refetch = {refetch}/>
-        )
+        if(index=== null){
+            console.log(data.pessoa[0].larUser)
+            return(
+                <ChangeUser 
+                lares = {data.pessoa[0].larUser} 
+                setIndex = {setIndex} />
+            )
+        }else{
+            data.pessoa.map((info)=>{
+                action({type:"UPDATE_PERSON", payload:{
+                   nome:info.login.firstName,
+                   sobrenome:info.login.lastName,
+                   idade:info.login.idade,
+                   administrador:info.larUser[index].isAdmin,
+                   sexo: info.login.sexo.sexo,
+                   saude: info.saude,
+                   email: info.login.username,
+                }});
+                action({type:"UPDATE_LAR",payload:{
+                    nome: info.larUser[index].organization.name,
+                    id: info.larUser[index].organization.id,
+                }});
+                action({type:"UPDATE_MORADORES",payload:info.larUser[index].organization.organizationUsers.map(o => o.pessoaSet.map(p => p))
+                })
+               
+                //console.log(info.lar.organizationUsers.map(o => o.pessoaSet.map(p => p)))
+                action({type:"UPDATE_TAREFAS",
+                payload:info.larUser[index].organization.tarefasSet.map(t => t)
+                })
+                console.log(info.larUser[index].organization.tarefasSet.map(t => t))
+            })
+            return(
+                <AppPageLogic setIndex = {setIndex} refetch = {refetch}/>
+            )
+        }
+        
     }
     return(
         <AppPageLogic/>
@@ -117,32 +127,38 @@ const AppPageLogic = (props) =>{
                   onClose={onClose}
                   visible={visible}
                 >
-                      <Menu style={{marginTop:"10vh"}} theme="ligth" mode="inline"  onSelect={(indice)=>{setOpcao(indice.key); }} defaultSelectedKeys={['1']}>
-                <Menu.Item key="1"  >
-                    <LayoutOutlined />  Visão Geral
-                </Menu.Item>
-                <Menu.Item key="2"  >
-                    <UnorderedListOutlined /> Tarefas 
-                </Menu.Item>
-                {/* <Menu.Item key="3" >
-                    <ShoppingCartOutlined /> Compras
-                </Menu.Item> */}
-                <Menu.Item key="4" > 
-                    <BarcodeOutlined /> Contas 
-                </Menu.Item>
-                <Menu.Item key="5" > 
-                    <PieChartOutlined/> Inventário
-                </Menu.Item>
-                <Menu.Item key="6" > 
-                    <SettingOutlined /> Emergência
-                </Menu.Item>
-                <Menu.Item key="7" > 
-                <UsergroupAddOutlined /> Entrar em novo lar
-                </Menu.Item>
-                <Menu.Item onClick={()=>{deleteTokens(); setLogged(false)}}>
-                    Sair
-                </Menu.Item>
-            </Menu>
+                <Menu style={{marginTop:"10vh"}} theme="ligth" mode="inline"  onSelect={(indice)=>{setOpcao(indice.key); }} defaultSelectedKeys={['1']}>
+                    <Menu.Item onClick={()=>{(props.setIndex)(null)}}>
+                        Trocar de Lar
+                    </Menu.Item>
+                    <Menu.Item key="1"  >
+                        <LayoutOutlined />  Visão Geral
+                    </Menu.Item>
+                    <Menu.Item key="2"  >
+                        <UnorderedListOutlined /> Tarefas 
+                    </Menu.Item>
+                    {/* <Menu.Item key="3" >
+                        <ShoppingCartOutlined /> Compras
+                    </Menu.Item> */}
+                    <Menu.Item key="4" > 
+                        <BarcodeOutlined /> Contas 
+                    </Menu.Item>
+                    <Menu.Item key="5" > 
+                        <PieChartOutlined/> Inventário
+                    </Menu.Item>
+                    <Menu.Item key="6" > 
+                        <HeartTwoTone /> Emergência
+                    </Menu.Item>
+                    <Menu.Item key="8" > 
+                        <SettingOutlined /> Configurações
+                    </Menu.Item>
+                    <Menu.Item key="7" > 
+                    <UsergroupAddOutlined /> Entrar em novo lar
+                    </Menu.Item>
+                    <Menu.Item onClick={()=>{deleteTokens(); setLogged(false)}}>
+                        Sair
+                    </Menu.Item>
+                </Menu>
                  
                 </Drawer>
               </>
@@ -158,7 +174,10 @@ const AppPageLogic = (props) =>{
               }}
               style={{backgroundColor:"white"}}
               >
-              <div style={{backgroundColor:"white"}} className="logo" />
+              <div style={{backgroundColor:"white", textAlign:"center"}} onClick={()=>{(props.setIndex)(null)}} className="logo">
+                <Avatar   shape="square" size={64} icon={<UserOutlined />} />
+                <p>Trocar de Lar</p>
+              </div>
               <Menu style={{marginTop:"10vh"}} theme="ligth" mode="inline"  onSelect={(indice)=>{setOpcao(indice.key); }} defaultSelectedKeys={['1']}>
                   <Menu.Item key="1"  >
                       <LayoutOutlined />  Visão Geral
@@ -176,8 +195,11 @@ const AppPageLogic = (props) =>{
                       <PieChartOutlined/> Inventário
                   </Menu.Item>
                   <Menu.Item key="6" > 
-                      <SettingOutlined /> Emergência
+                      <HeartTwoTone /> Emergência
                   </Menu.Item>
+                  <Menu.Item key="8" > 
+                        <SettingOutlined /> Configurações
+                    </Menu.Item>
                   <Menu.Item key="7" > 
                   <UsergroupAddOutlined /> Entrar em novo lar
                   </Menu.Item>
@@ -276,6 +298,14 @@ const ContentAbstraction =(props)=>{
                         <JoingHouse/>
                     </div>
                 }
+            </div>
+        )
+    }
+    if(props.opcao === "8"){
+        return(
+            <div style={{marginTop:"2vh", textAlign:"center"}}>
+                <h1>Configurações do myHome</h1>
+                <Configuracoes refetch = {props.refetch}/>
             </div>
         )
     }
