@@ -128,6 +128,9 @@ query{
            larUser{
              id
              isAdmin
+             organization{
+              id
+            }
            }
            login{
              id
