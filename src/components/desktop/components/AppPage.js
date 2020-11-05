@@ -358,7 +358,7 @@ export const Tarefas = (props) =>{
     return(
         <div>
             <Tabela columns= {columns} data = {data_table}/>
-            <AdicionarTarefas refetch = {props.refetch}/>
+            <AdicionarTarefas  refetch = {props.refetch}/>
         </div>
     )
 } 
@@ -385,7 +385,8 @@ const AdicionarTarefas = (props) => {
     const dataSource = []
     const {refetch} = props
     storage.person.moradores.map((info)=>
-    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,id: info[0].larUser[0].id},)
+    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,
+    id: info[0].larUser.find(u => u.organization.id === storage.person.lar.id ).id},)
     )
 
     const onFinish = values => {
@@ -401,7 +402,8 @@ const AdicionarTarefas = (props) => {
     };
    
     const onSelect = (value,info) => {
-        console.log('onSelect', info.id);
+      //console.log("a",storage.person.moradores)
+       // console.log('onSelect', info.id);
     }
     if(mutationLoading){
       return(
