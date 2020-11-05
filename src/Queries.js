@@ -100,6 +100,7 @@ query{
      hasHouse
      firstName
      lastName
+     username
    }
    saude{
      alergias
@@ -115,6 +116,7 @@ query{
    
    larUser{
      id
+     isAdmin
      organization{
        id
        name
