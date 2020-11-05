@@ -1,7 +1,7 @@
 import React,{Suspense,lazy, useState, useEffect} from 'react';
 import {Table,Tabs ,Card, Col, Row ,Menu} from 'antd';
 import {Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification, Modal} from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusCircleOutlined, PlusOutlined,ExclamationCircleOutlined  } from '@ant-design/icons';
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
 import { client2 } from "../../../settings";
@@ -28,10 +28,10 @@ import {
 
 const { TabPane } = Tabs;
 
-
+const { confirm } = Modal;
 
 export const VisaoGeral = (props) =>{
-    
+  const storage = useSelector(state => state)
     const Despesas = (props) =>{
        return(
         <Card title="Despesas" bordered={true}>
@@ -49,14 +49,25 @@ export const VisaoGeral = (props) =>{
     }
     if(isMobile){
         return(
+          <div >
+        <div style={{textAlign:"center"}}>
+
+          <h1>Bem vindo ao lar {storage.person.lar.nome}, {storage.person.personal.nome}!</h1>
+        </div>
             <div>
                 <Moradores refetch = {props.refetch}/>
                 <Despesas/>
                 <Tarefas/>
             </div>
+            </div>
         )
     }
     return(
+      <div >
+        <div style={{textAlign:"center"}}>
+
+          <h1>Bem vindo ao lar {storage.person.lar.nome}, {storage.person.personal.nome}!</h1>
+        </div>
         <div className="site-card-wrapper">
             <Row  gutter={{ xs: 1, sm: 16, md: 24}}>
                 <Col span={8}>
@@ -70,6 +81,7 @@ export const VisaoGeral = (props) =>{
                 </Col>
             </Row>
         </div>
+      </div>
     )
 }
 
@@ -823,5 +835,37 @@ const AddContatosEmergencia = (props) => {
       </Button>
     </Form.Item>
   </Form>
+  )
+}
+
+export const Configuracoes = (props) =>{
+  const storage = useSelector(state => state)
+  const [removeUser, { loading: mutationLoading, error: mutationError,data }] = useMutation(Remove_User_Home);
+  const {refetch} = props
+  function showDeleteConfirm() {
+    confirm({
+      title: 'Tem certeza que deseja sair deste lar?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Apenas um administrador poderá gerer um novo convite após esta ação.',
+      okText: 'Sim',
+      okType: 'danger',
+      cancelText: 'Não',
+      onOk() {
+          removeUser({variables:{email:storage.person.personal.email, larId:storage.person.lar.id}})
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+  if(data){
+    window.location.reload(false);
+  }
+  return(
+    <div>
+        <Button type="danger" onClick = {showDeleteConfirm}>
+          Sair deste lar permanentemente
+      </Button>
+    </div>
   )
 }
