@@ -36,7 +36,7 @@ const Login = () => {
   }
   const onFinish = (event) => {
     
-    console.log('Success:', event);
+    //console.log('Success:', event);
     setEntrando(true)
     
     LoginIn({variables:{email:(event.username).toLowerCase() , password: event.password}}).catch(err => {setEntrando(false); openNotification();})
