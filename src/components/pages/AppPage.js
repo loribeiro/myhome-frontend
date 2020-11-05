@@ -72,10 +72,10 @@ const AppPage = (props) =>{
                 action({type:"UPDATE_TAREFAS",
                 payload:info.larUser[index].organization.tarefasSet.map(t => t)
                 })
-                console.log(info.larUser[index].organization.tarefasSet.map(t => t))
+               // console.log(info.larUser[index].organization.tarefasSet.map(t => t))
             })
             return(
-                <AppPageLogic setIndex = {setIndex} refetch = {refetch}/>
+                <AppPageLogic index = {index} setIndex = {setIndex} refetch = {refetch}/>
             )
         }
         
@@ -221,7 +221,7 @@ const AppPageLogic = (props) =>{
             }
             <Content style={{ margin: '24px 16px 0' }}>
                 <div className="site-layout-background" style={{ padding: 24, minHeight: "75vh" }}>
-                    <ContentAbstraction opcao={opcao} refetch = {props.refetch}/>
+                    <ContentAbstraction index = {props.index}  opcao={opcao} refetch = {props.refetch}/>
                     <PWAPrompt copyTitle="Adicione a tela inicial!" 
                      copyBody="Este site tem funcionalidade de aplicativo. Adicione a sua tela inicial para utilizar em tela cheia e sem internet!"
                      copyShareButtonLabel ="1) Aperte o botão 'Compartilhar' "
@@ -247,7 +247,7 @@ const ContentAbstraction =(props)=>{
         return(
             <div style={{marginTop:"2vh",textAlign:"center"}}>
                 <h1>Tarefas</h1>
-                <Tarefas refetch = {props.refetch}/>
+                <Tarefas index = {props.index} refetch = {props.refetch}/>
             </div>
         )
     }
