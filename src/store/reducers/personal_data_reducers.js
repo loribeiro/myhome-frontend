@@ -22,6 +22,7 @@ const initialState = {
            administrador: null,
            sexo: null,
            saude:null,
+           email:null,
            
         }, 
         saude:{
