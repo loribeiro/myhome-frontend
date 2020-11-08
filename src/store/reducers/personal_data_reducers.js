@@ -6,6 +6,7 @@ export const updatePerson = createAction("UPDATE_PERSON")
 export const updateLar = createAction("UPDATE_LAR")
 export const updateSaude = createAction("UPDATE_SAUDE")
 export const updateTarefas = createAction("UPDATE_TAREFAS")
+export const updateContas = createAction("UPDATE_CONTAS")
 export const updateMoradores = createAction("UPDATE_MORADORES")
 export const requestStarted = createAction("REQUEST_STARTED");
 export const requestSuccess = createAction("REQUEST_SUCCESS");
@@ -36,6 +37,7 @@ const initialState = {
             nome:null,
             id: null,
         },
+        contas:[],
         moradores:[],
         tarefas:[],
         fetching:{
@@ -64,6 +66,10 @@ export const personalReducer = createReducer(initialState,{
     },
     [updateTarefas] : (state, action) => {
         state.tarefas = action.payload
+        return state
+    },
+    [updateContas]: (state, action) =>{
+        state.contas = action.payload
         return state
     },
     [updateSaude] : (state, action) => {
