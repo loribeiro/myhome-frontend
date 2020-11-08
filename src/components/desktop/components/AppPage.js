@@ -7,7 +7,7 @@ import {isMobile} from 'react-device-detect';
 import { client2 } from "../../../settings";
 import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation } from '@apollo/client';
-import {Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
+import {Create_Categoria_Conta,Create_Conta,Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
 import { updateSaude } from '../../../store/reducers/personal_data_reducers';
 import Sider from 'antd/lib/layout/Sider';
 import { OmitProps } from 'antd/lib/transfer/ListBody';
@@ -326,6 +326,18 @@ const Detalhes = (props)=>{
     )
   }
   return(<div></div>)
+}
+
+export const Contas = (props) =>{
+  const [deleteTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Delete_Tarefas);
+  const storage = useSelector(state => state)
+  const data_table = []
+  const {refetch} = props
+  return(
+    <div style={{textAlign:"center"}}>
+        <h1>Acompanhe e adicione as contas do lar</h1>
+    </div>
+  )
 }
 
 export const Tarefas = (props) =>{

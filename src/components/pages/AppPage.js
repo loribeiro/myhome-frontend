@@ -7,7 +7,7 @@ import { Retrieve_Person} from "../../Queries"
 import {ChangeUser} from "../desktop/ChangeUser"
 import { useQuery} from '@apollo/client';
 
-import {VisaoGeral,Tarefas,DadosSaude,Bens, Configuracoes} from "../desktop/components/AppPage"
+import {VisaoGeral,Tarefas,Contas,DadosSaude,Bens, Configuracoes} from "../desktop/components/AppPage"
 import { isMobile} from 'react-device-detect';
 import {CreatingHouse,JoingHouse} from "../mobile/components/JoinPage"
 import PWAPrompt from 'react-ios-pwa-prompt'
@@ -66,12 +66,17 @@ const AppPage = (props) =>{
                     id: info.larUser[index].organization.id,
                 }});
                 action({type:"UPDATE_MORADORES",payload:info.larUser[index].organization.organizationUsers.map(o => o.pessoaSet.map(p => p))
-                })
+                });
                
                 //console.log(info.lar.organizationUsers.map(o => o.pessoaSet.map(p => p)))
                 action({type:"UPDATE_TAREFAS",
                 payload:info.larUser[index].organization.tarefasSet.map(t => t)
+                });
+
+                action({type:"UPDATE_CONTAS", 
+                    payload:info.larUser[index].organization.contasSet.map(c => c)
                 })
+
                // console.log(info.larUser[index].organization.tarefasSet.map(t => t))
             })
             return(
@@ -237,10 +242,12 @@ const AppPageLogic = (props) =>{
 const ContentAbstraction =(props)=>{
     if( props.opcao === "1"){
         return(
-            <div style={{marginTop:"2vh"}}>
 
-                <VisaoGeral refetch = {props.refetch}/>
-            </div>
+                <div style={{marginTop:"2vh"}}>
+
+                    <VisaoGeral refetch = {props.refetch}/>
+                </div>
+           
         )
     }
     if(props.opcao === "2"){
@@ -261,7 +268,7 @@ const ContentAbstraction =(props)=>{
     if(props.opcao ==="4"){
         return(
             <div>
-                c
+                <Contas refetch = {props.refetch}/>
             </div>
         )
     }
