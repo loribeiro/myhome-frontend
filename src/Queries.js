@@ -1,5 +1,27 @@
 import gql from 'graphql-tag';
 
+export const Create_Conta = gql `
+mutation CreateConta($categoriaId: String!,$larId: String!,$nome: String!,$responsavelId: String!,$vencimento: String!){
+  createConta(categoriaId:$categoriaId, larId:$larId, nome: $nome, responsavelId:$responsavelId, vencimento: $vencimento){
+    Contas{
+      id
+    }
+  }
+}
+`;
+
+
+export const Create_Categoria_Conta = gql `
+mutation CreateCategoriaConta($larId: String!, $nome: String!){
+  createCategoriaConta(larId: $larId , nome: $nome){
+    Categoria{
+      id
+      nome
+    }
+  }
+}
+`;
+
 export const Remove_User_Home = gql `
 mutation RemoveUser($email: String!, $larId: String!){
   removeUser(usuario: $email, larId: $larId){
@@ -156,6 +178,26 @@ query{
          }
        
      }
+     contasSet{
+      id
+      nome
+      vencimento
+      responsavel{
+        id
+       user{
+         id
+         firstName
+         lastName
+       }
+      }
+      categoria{
+        nome
+        id
+        
+      }
+    
+    }
+
      tarefasSet{
        id,
        tarefa,
