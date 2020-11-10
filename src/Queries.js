@@ -1,5 +1,31 @@
 import gql from 'graphql-tag';
 
+export const Turn_Adm = gql `
+mutation addAdmin($larId: String!, $admId: String!){
+  addAdmin(larId:$larId, admId:$admId){
+    Lar{
+      id
+    }
+  }
+}
+`;
+
+export const Change_Owner = gql `
+mutation changeOwnership($larId: String!, $newId: String!){
+  changeOwnership(larId:$larId, newId:$newId){
+    Lar{
+      id
+    }
+  }
+}
+`;
+
+export const Is_Owner = gql`
+query IsOwner($larId: String!){
+  isOwner(larId:$larId)
+}
+`;
+
 export const Create_Conta = gql `
 mutation CreateConta($categoriaId: String!,$larId: String!,$nome: String!,$responsavelId: String!,$vencimento: String!){
   createConta(categoriaId:$categoriaId, larId:$larId, nome: $nome, responsavelId:$responsavelId, vencimento: $vencimento){
