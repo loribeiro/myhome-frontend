@@ -1,5 +1,36 @@
 import gql from 'graphql-tag';
 
+export const Create_Registro_Conta_Variavel = gql `mutation CreateRegistroContaVariavel($contaId:String!,$responsavelId: String!, $valor: String!){
+  createRegistroContaVariavel(contaId: $contaId, responsavelId: $responsavelId, valor: $valor){
+    Registro{
+      id
+    }
+  }
+}`;
+
+export const Create_Registro_Conta_Fixa = gql `mutation CreateRegistroContaFixa($contaId:String!,$responsavelId: String!, $valor: String!){
+  createRegistroContaFixa(contaId: $contaId, responsavelId: $responsavelId, valor: $valor){
+    Registro{
+      id
+    }
+  }
+}`;
+
+export const Create_Conta_Variavel = gql `mutation CreateContaVariavel($larId:String!,$nome: String!, $vencimento: String!){
+  createContaVariavel(larId: $larId, nome: $nome, vencimento: $vencimento){
+    Contas{
+      id
+    }
+  }
+}`;
+export const Create_Conta_Fixa = gql `mutation CreateContaFixa($larId:String!,$nome: String!, $vencimento: String!){
+  createContaFixa(larId: $larId, nome: $nome, vencimento: $vencimento){
+    Contas{
+      id
+    }
+  }
+}`;
+
 export const Turn_Adm = gql `
 mutation addAdmin($larId: String!, $admId: String!){
   addAdmin(larId:$larId, admId:$admId){
@@ -204,26 +235,37 @@ query{
          }
        
      }
-     contasSet{
+     
+    contasvariaveisSet{
       id
-      nome
       vencimento
-      responsavel{
+      nome
+      informacoescontaSet{
         id
-       user{
-         id
-         firstName
-         lastName
-       }
-      }
-      categoria{
-        nome
-        id
+        valor
+        responsavel{
+          id
+          
+        }
+        datetime
         
       }
-    
     }
-
+    contasfixasSet{
+      id
+      vencimento
+      nome
+      informacoescontafixaSet{
+        id
+        valor
+        responsavel{
+          id
+          
+        }
+        datetime
+        
+      }
+    }
      tarefasSet{
        id,
        tarefa,
