@@ -1,12 +1,11 @@
-import React,{Suspense,lazy, useState, useEffect} from 'react';
-import {Table,Tabs ,Card, Col, Row ,Menu} from 'antd';
-import {Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification, Modal} from 'antd';
+import React,{ useState, useEffect} from 'react';
+import {Table,Tabs ,Card, Col, Row } from 'antd';
+import {Steps,DatePicker,Select,List,message,Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification, Modal} from 'antd';
 import { MinusCircleOutlined, PlusOutlined,ExclamationCircleOutlined  } from '@ant-design/icons';
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
 import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import {Turn_Adm,Change_Owner,Is_Owner,Create_Categoria_Conta,Create_Conta,Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
+import {Turn_Adm,Change_Owner,Is_Owner,Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
 import { updateSaude } from '../../../store/reducers/personal_data_reducers';
 import Sider from 'antd/lib/layout/Sider';
 import { OmitProps } from 'antd/lib/transfer/ListBody';
@@ -26,8 +25,9 @@ import {
 } from "react-share";
 import { LoadingPageLite } from '../../../GeneralComponents';
 
+const { Option } = Select;
 const { TabPane } = Tabs;
-
+const { Step } = Steps;
 const { confirm } = Modal;
 
 export const VisaoGeral = (props) =>{
@@ -354,12 +354,194 @@ const Detalhes = (props)=>{
 export const Contas = (props) =>{
   const [deleteTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Delete_Tarefas);
   const storage = useSelector(state => state)
-  const data_table = []
+  
   const {refetch} = props
+  
+  
+    const expandedRowRender = () => {
+      const columns = [
+        { title: 'Morador', dataIndex: 'morador', key: 'morador' },
+        { title: 'Valor', dataIndex: 'valor', key: 'valor' },
+         
+      ];
+  
+      const data = [];
+      for (let i = 0; i < 3; ++i) {
+        data.push({
+          key: i,
+          date: '2014-12-24 23:12:00',
+          name: 'This is production name',
+          upgradeNum: 'Upgraded: 56',
+        });
+      }
+      return <Table columns={columns} dataSource={data} pagination={false} />;
+    };
+
   return(
     <div style={{textAlign:"center"}}>
         <h1>Acompanhe e adicione as contas do lar</h1>
+       <ContasFixas/>
+       <ContasVariaveis/>
+           
     </div>
+  )
+}
+
+const ContasFixas = (props)=>{
+  const storage = useSelector(state => state)
+  const data_table_fixa = []
+  const columns = [
+    { title: 'Conta', dataIndex: 'conta', key: 'conta' },
+    
+    {
+      title: 'Vencimento',
+      dataIndex: 'vencimento',
+      key: 'vencimento',
+    },
+  ];
+  storage.person.contasFixas.map(c =>{
+    data_table_fixa.push({
+      key:c.id,
+      conta: c.nome,
+      vencimento:c.vencimento
+    },)
+  })
+  return(
+    <div>
+      <h1>Contas Fixas</h1>
+    <Table
+    columns={columns}
+    expandable={{
+      expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+      rowExpandable: record => record.name !== 'Not Expandable',
+    }}
+    dataSource={data_table_fixa}
+    pagination={false}
+    scroll = {{ y: 240 }}
+/>
+<AddContaFixa/>
+    </div>
+  )
+}
+const AddContaFixa = (props) => {
+  const [deleteTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Delete_Tarefas);
+
+  const [current, setCurrent] = React.useState(0);
+  const contas = [
+    {
+      title: 'Aluguel',
+    },
+    {
+      title: 'Internet',
+    },
+    {
+      title: 'Luz',
+    },
+    {
+      title: 'Condominio',
+    },
+  ];
+  function handleChange(value) {
+    console.log(`selected ${value}`);
+  }
+  function onChange(date, dateString) {
+    console.log(date, dateString);
+  }
+  const next = () => {
+    setCurrent(current + 1);
+  };
+
+  const prev = () => {
+    setCurrent(current - 1);
+  };
+
+  const steps = [
+    {
+      title: 'Escolher Conta',
+      content: <div>
+        <Space direction="vertical">
+          
+           <Select defaultValue="" style={{ width: 120 }} onChange={handleChange}>
+              <Option value="Aluguel">Aluguel</Option>
+              <Option value="Internet">Internet</Option>
+              <Option value="Luz">Luz</Option>
+              <Option value="Condominio">Condominio</Option>
+
+           </Select>
+           <DatePicker onChange={onChange} />
+        </Space>
+      </div>,
+    },
+    {
+      title: 'Adicionar data de vencimento',
+      content: 'Second-content',
+    },
+    {
+      title: 'Adicionar contribuições',
+      content: 'Last-content',
+    },
+  ];
+  return (
+    <>
+      <Steps direction={isMobile ? "vertical" : "horizontal"} current={current}>
+        {steps.map(item => (
+          <Step key={item.title} title={item.title} />
+        ))}
+      </Steps>
+      <div className="steps-content">{steps[current].content}</div>
+      <div className="steps-action">
+        {current < steps.length - 1 && (
+          <Button type="primary" onClick={() => next()}>
+            Proximo
+          </Button>
+        )}
+        {current === steps.length - 1 && (
+          <Button type="primary" onClick={() => message.success('Processing complete!')}>
+            Concluir
+          </Button>
+        )}
+        {current > 0  && (
+          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+            Anterior
+          </Button>
+        )}
+      </div>
+    </>
+  );
+}
+const ContasVariaveis = (props) =>{
+  const storage = useSelector(state => state)
+  const data_table_variavel = []
+  const columns = [
+    { title: 'Conta', dataIndex: 'conta', key: 'conta' },
+    
+    {
+      title: 'Vencimento',
+      dataIndex: 'vencimento',
+      key: 'vencimento',
+    },
+  ];
+  storage.person.contasVariaveis.map(c =>{
+    data_table_variavel.push({
+      key:c.id,
+      conta: c.nome,
+      vencimento:c.vencimento
+    },)
+  })
+  return(
+    <div>
+      <h1>Contas Variaveis</h1>
+    <Table
+                columns={columns}
+                expandable={{
+                  expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                  rowExpandable: record => record.name !== 'Not Expandable',
+                }}
+                dataSource={data_table_variavel}
+                pagination={false}
+                scroll = {{ y: 240 }}
+                />
+      </div>
   )
 }
 
@@ -410,6 +592,7 @@ const Tabela = (props) =>{
                 }}
                 dataSource={props.data}
                 pagination={false}
+                scroll = {{ y: 240 }}
             />
         </div>
     )
