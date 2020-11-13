@@ -73,10 +73,12 @@ const AppPage = (props) =>{
                 payload:info.larUser[index].organization.tarefasSet.map(t => t)
                 });
 
-                action({type:"UPDATE_CONTAS", 
-                    payload:info.larUser[index].organization.contasSet.map(c => c)
+                action({type:"UPDATE_CONTAS_FIXAS", 
+                    payload:info.larUser[index].organization.contasfixasSet.map(c => c)
                 })
-
+                action({type:"UPDATE_CONTAS_VARIAVEIS", 
+                    payload:info.larUser[index].organization.contasvariaveisSet.map(c => c)
+                })
                // console.log(info.larUser[index].organization.tarefasSet.map(t => t))
             })
             return(
