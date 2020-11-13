@@ -1,11 +1,11 @@
 import React,{ useState, useEffect} from 'react';
 import {Table,Tabs ,Card, Col, Row } from 'antd';
-import {Steps,DatePicker,Select,List,message,Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification, Modal} from 'antd';
+import {Steps,InputNumber,Select,List,message,Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification, Modal} from 'antd';
 import { MinusCircleOutlined, PlusOutlined,ExclamationCircleOutlined  } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
 import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import {Turn_Adm,Change_Owner,Is_Owner,Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude} from "../../../Queries"
+import {Turn_Adm,Change_Owner,Is_Owner,Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude, Create_Conta_Fixa} from "../../../Queries"
 import { updateSaude } from '../../../store/reducers/personal_data_reducers';
 import Sider from 'antd/lib/layout/Sider';
 import { OmitProps } from 'antd/lib/transfer/ListBody';
@@ -390,6 +390,7 @@ export const Contas = (props) =>{
 const ContasFixas = (props)=>{
   const storage = useSelector(state => state)
   const data_table_fixa = []
+  const dataSource = []
   const columns = [
     { title: 'Conta', dataIndex: 'conta', key: 'conta' },
     
@@ -406,6 +407,10 @@ const ContasFixas = (props)=>{
       vencimento:c.vencimento
     },)
   })
+  storage.person.moradores.map((info)=>
+    dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,
+    id: info[0].larUser.find(u => u.organization.id === storage.person.lar.id ).id},)
+    )
   return(
     <div>
       <h1>Contas Fixas</h1>
@@ -419,42 +424,42 @@ const ContasFixas = (props)=>{
     pagination={false}
     scroll = {{ y: 240 }}
 />
-<AddContaFixa/>
+<AddContaFixa moradores = {dataSource} larId = {storage.person.lar.id}/>
     </div>
   )
 }
 const AddContaFixa = (props) => {
-  const [deleteTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Delete_Tarefas);
+  const [createConta, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Conta_Fixa);
+  const [conta, setConta ] = useState("")
+  const [date, setDate ] = useState("5")
 
   const [current, setCurrent] = React.useState(0);
-  const contas = [
-    {
-      title: 'Aluguel',
-    },
-    {
-      title: 'Internet',
-    },
-    {
-      title: 'Luz',
-    },
-    {
-      title: 'Condominio',
-    },
-  ];
+  
   function handleChange(value) {
     console.log(`selected ${value}`);
+    setConta(value)
   }
-  function onChange(date, dateString) {
-    console.log(date, dateString);
+  function onChange(value) {
+    //console.log(date, dateString);
+    setDate(value.toString())
   }
   const next = () => {
-    setCurrent(current + 1);
+    if(current === 0 && date !=="" && conta !==""){
+      //createConta({variables:{nome: conta, vencimento:date, larId:props.larId}})
+      setCurrent(current + 1);
+    }
   };
 
   const prev = () => {
     setCurrent(current - 1);
   };
-
+  const onNumberChange = value => {
+    
+  };
+  const formItemLayout = {
+    labelCol: { span: 7 },
+    wrapperCol: { span: 12 },
+  };
   const steps = [
     {
       title: 'Escolher Conta',
@@ -468,19 +473,39 @@ const AddContaFixa = (props) => {
               <Option value="Condominio">Condominio</Option>
 
            </Select>
-           <DatePicker onChange={onChange} />
+           <InputNumber min={1} max={30} defaultValue={5} onChange={onChange} />
         </Space>
       </div>,
     },
     {
-      title: 'Adicionar data de vencimento',
-      content: 'Second-content',
-    },
-    {
       title: 'Adicionar contribuições',
-      content: 'Last-content',
+      content: <div>
+         <Form>
+            {
+              props.moradores.map(m=>(
+                <Form.Item
+        {...formItemLayout}
+        label={m.value}
+        //validateStatus={number.validateStatus}
+        //help={number.errorMsg || tips}
+      >
+        <InputNumber min={8} max={12}  onChange={onNumberChange} />
+      </Form.Item>
+              
+              ))
+            }
+         </Form>
+      </div>,
     },
   ];
+  if(mutationLoading){
+    return(
+      <h1>Carregando</h1>
+    )
+  }
+  if(data){
+    console.log(data)
+  }
   return (
     <>
       <Steps direction={isMobile ? "vertical" : "horizontal"} current={current}>
