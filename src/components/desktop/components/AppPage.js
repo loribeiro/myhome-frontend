@@ -1,11 +1,12 @@
 import React,{ useState, useEffect} from 'react';
 import {Table,Tabs ,Card, Col, Row } from 'antd';
-import {Steps,InputNumber,Select,List,message,Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification, Modal} from 'antd';
+import {Steps,Result,InputNumber,Select,List,message,Drawer,Switch,Popconfirm ,Form,Divider ,Input, Button, Space ,AutoComplete,notification, Modal} from 'antd';
 import { MinusCircleOutlined, PlusOutlined,ExclamationCircleOutlined  } from '@ant-design/icons';
 import {isMobile} from 'react-device-detect';
+import CurrencyInput from 'react-currency-input';
 import { useDispatch, useSelector } from 'react-redux';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import {Turn_Adm,Change_Owner,Is_Owner,Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude, Create_Conta_Fixa} from "../../../Queries"
+import {Create_Registro_Conta_Fixa,Create_Registro_Conta_Variavel,Turn_Adm,Change_Owner,Is_Owner,Remove_User_Home,Make_Invitation,Create_Task,Delete_Tarefas,Create_Bem,Create_Contato,Update_Saude, Create_Conta_Fixa} from "../../../Queries"
 import { updateSaude } from '../../../store/reducers/personal_data_reducers';
 import Sider from 'antd/lib/layout/Sider';
 import { OmitProps } from 'antd/lib/transfer/ListBody';
@@ -24,6 +25,7 @@ import {
   WhatsappIcon
 } from "react-share";
 import { LoadingPageLite } from '../../../GeneralComponents';
+import FormItem from 'antd/lib/form/FormItem';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -380,8 +382,8 @@ export const Contas = (props) =>{
   return(
     <div style={{textAlign:"center"}}>
         <h1>Acompanhe e adicione as contas do lar</h1>
-       <ContasFixas/>
-       <ContasVariaveis/>
+       <ContasFixas refetch={props.refetch}/>
+       <ContasVariaveis refetch={props.refetch}/>
            
     </div>
   )
@@ -391,6 +393,7 @@ const ContasFixas = (props)=>{
   const storage = useSelector(state => state)
   const data_table_fixa = []
   const dataSource = []
+  const [visible, setVisible] = useState(false)
   const columns = [
     { title: 'Conta', dataIndex: 'conta', key: 'conta' },
     
@@ -424,17 +427,30 @@ const ContasFixas = (props)=>{
     pagination={false}
     scroll = {{ y: 240 }}
 />
-<AddContaFixa moradores = {dataSource} larId = {storage.person.lar.id}/>
+<Button type="primary" htmlType="submit" onClick={() => setVisible(true)}>
+            Adicionar Conta Fixa
+          </Button>
+          <Modal
+          title="Adicionar Conta"
+          footer = {null}
+          visible = {visible}
+          
+          destroyOnClose
+        >
+<AddContaFixa setVisible = {setVisible} refetch={props.refetch} moradores = {dataSource} larId = {storage.person.lar.id}/>
+</Modal>
     </div>
   )
 }
 const AddContaFixa = (props) => {
   const [createConta, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Conta_Fixa);
+  const [createRegistro, { loading: mutationLoading2, error: mutationError2,data: data2 }] = useMutation(Create_Registro_Conta_Fixa);
+  //const []
   const [conta, setConta ] = useState("")
   const [date, setDate ] = useState("5")
-
+  const [valor, setValor] = useState(0)
   const [current, setCurrent] = React.useState(0);
-  
+  const {refetch} = props
   function handleChange(value) {
     console.log(`selected ${value}`);
     setConta(value)
@@ -445,7 +461,7 @@ const AddContaFixa = (props) => {
   }
   const next = () => {
     if(current === 0 && date !=="" && conta !==""){
-      //createConta({variables:{nome: conta, vencimento:date, larId:props.larId}})
+      createConta({variables:{nome: conta, vencimento:date, larId:props.larId}})
       setCurrent(current + 1);
     }
   };
@@ -456,6 +472,18 @@ const AddContaFixa = (props) => {
   const onNumberChange = value => {
     
   };
+  const onFinish = values => {
+   //console.log(values)
+   //console.log(data.createContaFixa.Contas.id)
+   for (const [key, value] of Object.entries(values.contas)) {
+    createRegistro({variables:{contaId:data.createContaFixa.Contas.id,responsavelId:key.toString(), valor: value.valor.split('$')[1].replace('.','').replace(',','.')}})
+    console.log(`${key}:`, value.valor.split('$')[1].replace('.','').replace(',','.'));
+   
+    
+  }
+      
+    refetch()
+  };
   const formItemLayout = {
     labelCol: { span: 7 },
     wrapperCol: { span: 12 },
@@ -464,36 +492,80 @@ const AddContaFixa = (props) => {
     {
       title: 'Escolher Conta',
       content: <div>
+        <Form  name="dynamic_form_nest_item" preserve={false} autoComplete="off">
         <Space direction="vertical">
+        <Form.Item
           
-           <Select defaultValue="" style={{ width: 120 }} onChange={handleChange}>
+          //rules={[{ required: false, message: 'Faltando Tarefa' }]}
+          label="Conta"
+          
+        >
+           <Select  defaultValue="" style={{ width: 120 }} onChange={handleChange}>
               <Option value="Aluguel">Aluguel</Option>
               <Option value="Internet">Internet</Option>
               <Option value="Luz">Luz</Option>
               <Option value="Condominio">Condominio</Option>
 
            </Select>
+           </Form.Item>
+           <Form.Item
+          
+          //rules={[{ required: false, message: 'Faltando Tarefa' }]}
+          label="Vencimento(dia)"
+          
+          >
+
            <InputNumber min={1} max={30} defaultValue={5} onChange={onChange} />
+        </Form.Item>
+        <Button type="primary"  onClick={() => {
+          if(current === 0 && date !=="" && conta !==""){
+            createConta({variables:{nome: conta, vencimento:date, larId:props.larId}})
+            setCurrent(current + 1);
+          }
+        }}>
+            Proximo
+          </Button>
         </Space>
+        </Form>
       </div>,
     },
     {
       title: 'Adicionar contribuições',
       content: <div>
-         <Form>
-            {
-              props.moradores.map(m=>(
-                <Form.Item
-        {...formItemLayout}
-        label={m.value}
-        //validateStatus={number.validateStatus}
-        //help={number.errorMsg || tips}
-      >
-        <InputNumber min={8} max={12}  onChange={onNumberChange} />
-      </Form.Item>
-              
-              ))
-            }
+         <Form preserve={false} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+         <Form.List name="contas">
+         {fields => (
+           <div>
+              {
+                props.moradores.map(m=>(
+                  <Form.Item
+          {...formItemLayout}
+          {...m}
+          name={[m.id, 'valor']}
+                        fieldKey={[m.id, 'valor']}
+          initialValue = {"R$0"}
+                        rules={[{ required: false, message: 'Defina um valor' }]}
+          label={m.value}
+          //validateStatus={number.validateStatus}
+          //help={number.errorMsg || tips}
+        >
+          <CurrencyInput decimalSeparator = "," thousandSeparator = "." 
+                                          allowEmpty = {false}  inputType="tel" prefix="R$"
+                                          //onChangeEvent = {(event, maskedvalue, floatvalue)=>{setValor(floatvalue);}}
+                                          />
+
+        </Form.Item>
+                
+                ))
+              }
+              </div>
+              )}
+         </Form.List>
+          
+            <Button type="primary" htmlType="submit" onClick={() => message.success('Processing complete!')}>
+            Concluir
+          </Button>
+            
          </Form>
       </div>,
     },
@@ -503,8 +575,20 @@ const AddContaFixa = (props) => {
       <h1>Carregando</h1>
     )
   }
-  if(data){
-    console.log(data)
+  if(data2){
+    return(
+      <Result
+    status="success"
+    title="Conta adicionada com sucesso"
+    
+    extra={[
+      <Button type="primary" key="console" onClick={()=>(props.setVisible(false))}>
+       Fechar
+      </Button>,
+      
+    ]}
+  />
+    )
   }
   return (
     <>
@@ -515,25 +599,18 @@ const AddContaFixa = (props) => {
       </Steps>
       <div className="steps-content">{steps[current].content}</div>
       <div className="steps-action">
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Proximo
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => message.success('Processing complete!')}>
-            Concluir
-          </Button>
-        )}
-        {current > 0  && (
-          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-            Anterior
-          </Button>
-        )}
+        {current === 0 
+        ?
+        <Button type = "danger" onClick={()=>(props.setVisible(false))}> Cancelar</Button>
+        :
+        null
+        }
       </div>
     </>
   );
 }
+
+
 const ContasVariaveis = (props) =>{
   const storage = useSelector(state => state)
   const data_table_variavel = []
@@ -633,6 +710,7 @@ const AdicionarTarefas = (props) => {
     )
 
     const onFinish = values => {
+      console.log(values)
       values.tasks.map(v => {
         var result = dataSource.find(obj => {
           return obj.value === v.responsible
@@ -656,7 +734,7 @@ const AdicionarTarefas = (props) => {
       )
     }
     return (
-      <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+      <Form name="dynamic_form_nest_item"  onFinish={onFinish} autoComplete="off">
         <Form.List name="tasks">
           {(fields, { add, remove }) => {
             return (

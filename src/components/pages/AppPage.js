@@ -195,7 +195,7 @@ const AppPageLogic = (props) =>{
                   {/* <Menu.Item key="3" >
                       <ShoppingCartOutlined /> Compras
                   </Menu.Item> */}
-                  <Menu.Item key="4" disabled > 
+                  <Menu.Item key="4" > 
                       <BarcodeOutlined /> Contas 
                   </Menu.Item>
                   <Menu.Item key="5" > 
