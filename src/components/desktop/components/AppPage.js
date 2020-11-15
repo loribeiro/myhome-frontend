@@ -403,24 +403,26 @@ const ContasFixas = (props)=>{
       key: 'vencimento',
     },
   ];
-  storage.person.contasFixas.map(c =>{
-    data_table_fixa.push({
-      key:c.id,
-      conta: c.nome,
-      vencimento:c.vencimento
-    },)
-  })
   storage.person.moradores.map((info)=>
     dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,
     id: info[0].larUser.find(u => u.organization.id === storage.person.lar.id ).id},)
     )
+  storage.person.contasFixas.map(c =>{
+    data_table_fixa.push({
+      key:c.id,
+      conta: c.nome,
+      vencimento:c.vencimento,
+      description:<ContaIntTable moradores={dataSource} informacoes={c.informacoescontafixaSet}/>
+    },)
+  })
+  
   return(
     <div>
       <h1>Contas Fixas</h1>
     <Table
     columns={columns}
     expandable={{
-      expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+      expandedRowRender: record =><div> {record.description}</div>,
       rowExpandable: record => record.name !== 'Not Expandable',
     }}
     dataSource={data_table_fixa}
@@ -440,6 +442,36 @@ const ContasFixas = (props)=>{
 <AddContaFixa setVisible = {setVisible} refetch={props.refetch} moradores = {dataSource} larId = {storage.person.lar.id}/>
 </Modal>
     </div>
+  )
+}
+const ContaIntTable = (props) =>{
+  const data_table_fixa = []
+  const columns = [
+    { title: 'Nome', dataIndex: 'nome', key: 'nome' },
+    
+    {
+      title: 'Valor',
+      dataIndex: 'valor',
+      key: 'valor',
+    },
+  ];
+  props.informacoes.map(c =>{
+    
+     data_table_fixa.push({
+      key:c.id,
+      nome: props.moradores.find( m => m.id === c.responsavel.id).value,
+      valor:"R$"+c.valor,
+      
+    },)
+  })
+  return(
+    <Table
+    columns={columns}
+   
+    dataSource={data_table_fixa}
+    pagination={false}
+    //scroll = {{ y: 240 }}
+/>
   )
 }
 const AddContaFixa = (props) => {
@@ -614,6 +646,7 @@ const AddContaFixa = (props) => {
 const ContasVariaveis = (props) =>{
   const storage = useSelector(state => state)
   const data_table_variavel = []
+  const dataSource = []
   const columns = [
     { title: 'Conta', dataIndex: 'conta', key: 'conta' },
     
@@ -623,11 +656,17 @@ const ContasVariaveis = (props) =>{
       key: 'vencimento',
     },
   ];
+   storage.person.moradores.map((info)=>
+  dataSource.push({value: info[0].login.firstName +" "+info[0].login.lastName,
+  id: info[0].larUser.find(u => u.organization.id === storage.person.lar.id ).id},)
+  )
   storage.person.contasVariaveis.map(c =>{
     data_table_variavel.push({
       key:c.id,
       conta: c.nome,
-      vencimento:c.vencimento
+      vencimento:c.vencimento,
+      description:<ContaIntTable moradores={dataSource} informacoes={c.informacoescontafixaSet}/>
+
     },)
   })
   return(
@@ -636,7 +675,7 @@ const ContasVariaveis = (props) =>{
     <Table
                 columns={columns}
                 expandable={{
-                  expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                  expandedRowRender: record => <div style={{ margin: 0 }}>{record.description}</div>,
                   rowExpandable: record => record.name !== 'Not Expandable',
                 }}
                 dataSource={data_table_variavel}
