@@ -6,8 +6,14 @@ import { useDispatch } from 'react-redux';
 import { Retrieve_Person} from "../../Queries"
 import {ChangeUser} from "../desktop/ChangeUser"
 import { useQuery} from '@apollo/client';
+import {Configuracoes} from "../desktop/components/AppPage/Configuracoes"
+import {VisaoGeral} from "../desktop/components/AppPage/VisaoGeral"
+import {Tarefas} from "../desktop/components/AppPage/Tarefas"
+import {Contas} from "../desktop/components/AppPage/Contas"
+import {DadosSaude} from "../desktop/components/AppPage/Saude"
+import {Bens} from "../desktop/components/AppPage/Inventario"
 
-import {VisaoGeral,Tarefas,Contas,DadosSaude,Bens, Configuracoes} from "../desktop/components/AppPage"
+//import {VisaoGeral,Tarefas,Contas,DadosSaude,Bens, Configuracoes} from "../desktop/components/AppPage"
 import { isMobile} from 'react-device-detect';
 import {CreatingHouse,JoingHouse} from "../mobile/components/JoinPage"
 import PWAPrompt from 'react-ios-pwa-prompt'

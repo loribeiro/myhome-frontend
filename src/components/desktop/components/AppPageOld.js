@@ -398,7 +398,7 @@ const ContasFixas = (props)=>{
     { title: 'Conta', dataIndex: 'conta', key: 'conta' },
     
     {
-      title: 'Vencimento',
+      title: 'Dia do Vencimento',
       dataIndex: 'vencimento',
       key: 'vencimento',
     },
