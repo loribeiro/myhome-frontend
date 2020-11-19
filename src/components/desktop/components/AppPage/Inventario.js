@@ -10,7 +10,7 @@ const { TabPane } = Tabs;
 const { Step } = Steps;
 const { confirm } = Modal;
 
-export const Bens = (props) =>{
+const Bens = (props) =>{
     const storage = useSelector(state => state)
     
     const data_table = []
@@ -43,6 +43,7 @@ export const Bens = (props) =>{
       </div>
     )
   }
+  export default Bens;
   
   const AdicionarBens = (props) => {
     const [addBem, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Bem);

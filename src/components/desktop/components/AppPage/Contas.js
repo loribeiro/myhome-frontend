@@ -10,7 +10,7 @@ const { TabPane } = Tabs;
 const { Step } = Steps;
 const { confirm } = Modal;
 
-export const Contas = (props) =>{
+const Contas = (props) =>{
     const [deleteTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Delete_Tarefas);
     const storage = useSelector(state => state)
     
@@ -45,6 +45,8 @@ export const Contas = (props) =>{
       </div>
     )
   }
+  export default Contas;
+
   
   const ContasFixas = (props)=>{
     const storage = useSelector(state => state)

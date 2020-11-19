@@ -10,7 +10,7 @@ const { TabPane } = Tabs;
 const { Step } = Steps;
 const { confirm } = Modal;
 
-export const Configuracoes = (props) =>{
+const Configuracoes = (props) =>{
     const storage = useSelector(state => state)
     const { loading, error, data} = useQuery(Is_Owner,{variables:{larId: storage.person.lar.id}});
     
@@ -106,4 +106,4 @@ export const Configuracoes = (props) =>{
     )
   }
 
- // export default Configuracoes;
+ export default Configuracoes;

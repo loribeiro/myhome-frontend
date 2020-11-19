@@ -26,7 +26,7 @@ const Tabela = (props) =>{
         </div>
     )
 }
-export const DadosSaude = (props)=>{
+const DadosSaude = (props)=>{
 
     return(
       <Tabs defaultActiveKey="1" tabPosition="top" style={{ height: "100vh" }}>
@@ -44,6 +44,8 @@ export const DadosSaude = (props)=>{
     </Tabs>
     )
   }
+  export default DadosSaude;
+  
   const Resumo = (props) =>{
     const storage = useSelector(state => state)
   
@@ -59,7 +61,7 @@ export const DadosSaude = (props)=>{
       </div>
     )
   }
-  export const UpdateSaude = (props) => {
+   const UpdateSaude = (props) => {
     const [updateSaude, { loading: mutationLoading, error: mutationError,data }] = useMutation(Update_Saude);
     const {refetch} = props
     const storage = useSelector(state => state)

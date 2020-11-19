@@ -15,7 +15,7 @@ const { TabPane } = Tabs;
 const { Step } = Steps;
 const { confirm } = Modal;
 
-export const VisaoGeral = (props) =>{
+const VisaoGeral = (props) =>{
   const storage = useSelector(state => state)
     const Despesas = (props) =>{
        return(
@@ -70,6 +70,7 @@ export const VisaoGeral = (props) =>{
     )
 }
 
+export default VisaoGeral;
 
 const Moradores = (props)=>{
   const storage = useSelector(state => state)

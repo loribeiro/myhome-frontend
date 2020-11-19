@@ -10,24 +10,8 @@ const { TabPane } = Tabs;
 const { Step } = Steps;
 const { confirm } = Modal;
 
-const Tabela = (props) =>{
-    
-    return(
-        <div>
-            <Table
-                columns={props.columns}
-                expandable={{
-                expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
-                rowExpandable: record => record.name !== 'Not Expandable',
-                }}
-                dataSource={props.data}
-                pagination={false}
-                scroll = {{ y: 240 }}
-            />
-        </div>
-    )
-}
-export const Tarefas = (props) =>{
+
+const Tarefas = (props) =>{
     const [deleteTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Delete_Tarefas);
     const storage = useSelector(state => state)
     const data_table = []
@@ -61,6 +45,7 @@ export const Tarefas = (props) =>{
           </div>
       )
   } 
+  export default Tarefas;
   const AdicionarTarefas = (props) => {
     const storage = useSelector(state => state)
     const [addTask, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Task);
@@ -161,3 +146,20 @@ export const Tarefas = (props) =>{
       </Form>
     );
   };
+  const Tabela = (props) =>{
+    
+    return(
+        <div>
+            <Table
+                columns={props.columns}
+                expandable={{
+                expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+                rowExpandable: record => record.name !== 'Not Expandable',
+                }}
+                dataSource={props.data}
+                pagination={false}
+                scroll = {{ y: 240 }}
+            />
+        </div>
+    )
+}

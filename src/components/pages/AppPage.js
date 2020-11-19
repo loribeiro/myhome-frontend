@@ -1,4 +1,4 @@
-import React,{ useState} from 'react';
+import React,{ useState, lazy,Suspense} from 'react';
 import {Affix, Drawer, Collapse, Input, Layout, Menu,  Select, Tabs,Avatar } from 'antd';
 import {HeartTwoTone,UserOutlined,UsergroupAddOutlined,LayoutOutlined ,EllipsisOutlined,BarcodeOutlined,UnorderedListOutlined,SettingOutlined, PieChartOutlined} from '@ant-design/icons';
 import {deleteTokens,getTokens, getUserIndex, setUserIndex} from "../../Token"
@@ -6,18 +6,19 @@ import { useDispatch } from 'react-redux';
 import { Retrieve_Person} from "../../Queries"
 import {ChangeUser} from "../desktop/ChangeUser"
 import { useQuery} from '@apollo/client';
-import {Configuracoes} from "../desktop/components/AppPage/Configuracoes"
-import {VisaoGeral} from "../desktop/components/AppPage/VisaoGeral"
-import {Tarefas} from "../desktop/components/AppPage/Tarefas"
-import {Contas} from "../desktop/components/AppPage/Contas"
-import {DadosSaude} from "../desktop/components/AppPage/Saude"
-import {Bens} from "../desktop/components/AppPage/Inventario"
-
+import {LoadingPageLite} from "../../GeneralComponents"
 //import {VisaoGeral,Tarefas,Contas,DadosSaude,Bens, Configuracoes} from "../desktop/components/AppPage"
 import { isMobile} from 'react-device-detect';
 import {CreatingHouse,JoingHouse} from "../mobile/components/JoinPage"
 import PWAPrompt from 'react-ios-pwa-prompt'
 import { NavBar} from 'antd-mobile';
+
+const DadosSaude = lazy(()=> import("../desktop/components/AppPage/Saude"))
+const Configuracoes = lazy(()=>import("../desktop/components/AppPage/Configuracoes"))
+const VisaoGeral = lazy(()=>import("../desktop/components/AppPage/VisaoGeral"))
+const Tarefas = lazy(()=>import("../desktop/components/AppPage/Tarefas"))
+const Contas = lazy(()=>import("../desktop/components/AppPage/Contas"))
+const Bens = lazy(()=>import("../desktop/components/AppPage/Inventario"))
 
 
 const { TextArea } = Input;
@@ -252,8 +253,11 @@ const ContentAbstraction =(props)=>{
         return(
 
                 <div style={{marginTop:"2vh"}}>
-
+                <Suspense fallback={<LoadingPageLite/>}>
+                
                     <VisaoGeral refetch = {props.refetch}/>
+                </Suspense>
+
                 </div>
            
         )
@@ -262,7 +266,11 @@ const ContentAbstraction =(props)=>{
         return(
             <div style={{marginTop:"2vh",textAlign:"center"}}>
                 <h1>Tarefas</h1>
-                <Tarefas index = {props.index} refetch = {props.refetch}/>
+                <Suspense fallback={<LoadingPageLite/>}>
+
+                     <Tarefas index = {props.index} refetch = {props.refetch}/>
+                </Suspense>
+
             </div>
         )
     }
@@ -276,7 +284,11 @@ const ContentAbstraction =(props)=>{
     if(props.opcao ==="4"){
         return(
             <div>
-                <Contas refetch = {props.refetch}/>
+                <Suspense fallback={<LoadingPageLite/>}>
+
+                     <Contas refetch = {props.refetch}/>
+                </Suspense>
+
             </div>
         )
     }
@@ -284,7 +296,11 @@ const ContentAbstraction =(props)=>{
         return(
             <div style={{marginTop:"2vh", textAlign:"center"}}>
                 <h1>Adicione seus bens pessoais</h1>
-                <Bens refetch = {props.refetch}/>
+                <Suspense fallback={<LoadingPageLite/>}>
+
+                    <Bens refetch = {props.refetch}/>
+                </Suspense>
+
             </div>
         )
     }
@@ -292,7 +308,10 @@ const ContentAbstraction =(props)=>{
         return(
             <div style={{marginTop:"2vh", textAlign:"center"}}>
                 <h1>Atualize suas informações de saúde</h1>
-                <DadosSaude refetch = {props.refetch}/>
+                <Suspense fallback={<LoadingPageLite/>}>
+
+                    <DadosSaude refetch = {props.refetch}/>
+                </Suspense>
             </div>
         )
     }
@@ -320,15 +339,21 @@ const ContentAbstraction =(props)=>{
         return(
             <div style={{marginTop:"2vh", textAlign:"center"}}>
                 <h1>Configurações do myHome</h1>
-                <Configuracoes refetch = {props.refetch}/>
+                <Suspense fallback={<LoadingPageLite/>}>
+
+                     <Configuracoes refetch = {props.refetch}/>
+                </Suspense>
+
             </div>
         )
     }
    
     return(
         <div style={{marginTop:"10vh"}}>
+        <Suspense fallback={<LoadingPageLite/>}>
+            <VisaoGeral refetch = {props.refetch}/>
+        </Suspense>
 
-        <VisaoGeral refetch = {props.refetch}/>
     </div>
     )
 }
