@@ -1,8 +1,9 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Row, Select, Space, Steps, Tabs } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
+import { unmountComponentAtNode } from 'react-dom';
 import { useSelector } from 'react-redux';
 import {
   EmailIcon, EmailShareButton,
@@ -116,7 +117,7 @@ const Moradores = (props)=>{
                   
               )}
               {
-                storage.person.personal.administrador
+                storage.person.personal.administrador && visible === false
                 ? 
                 <AddMoradores refetch = {props.refetch}/>
                 :
@@ -143,13 +144,10 @@ const AddMoradores = (props) =>{
     })
     refetch()
   };
-  
-  const onSelect = (value,info) => {
-      console.log('onSelect', info.id);
-  }
-  if(data){
+  function success (data){
     var QRCode = require('qrcode.react');
-    const modal = Modal.success({
+
+    Modal.success({
       title: 'Agora é só compartilhar o convite!',
       content: <div style={{textAlign:"center", display:"grid", gridAutoRows:"1fr 1fr"}}>
         <div>
@@ -189,8 +187,17 @@ const AddMoradores = (props) =>{
           </EmailShareButton>
         </div>
         </div> ,
+        //onOk :()=> setZerar(zerar+1),
     });
+  }  
+  
+  const onSelect = (value,info) => {
+      console.log('onSelect', info.id);
+  }
+  if(data){
     //modal.destroy();
+   success(data)
+    
     console.log(data.makeInvitation.Token)
     
   }
@@ -202,7 +209,7 @@ const AddMoradores = (props) =>{
     )
   }
   return (
-    <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+    <Form name="dynamic_form_nest_item" onFinish={onFinish} preserve={false} autoComplete="off">
       <Form.List name="tasks">
         {(fields, { add, remove }) => {
           return (
@@ -229,7 +236,10 @@ const AddMoradores = (props) =>{
                 <Button
                   type="dashed"
                   onClick={() => {
-                    add();
+                    if(fields.length<1){
+
+                      add();
+                    }
                   }}
                   block
                 >
@@ -251,10 +261,10 @@ const AddMoradores = (props) =>{
      {/* {
        data
        ?
-       <QrCodePresenter token = {data.makeInvitation.Token}/>
+       <Button></Button>
        :
        null
-     } */}
+     }*/}
     </Form>
   );
 }
