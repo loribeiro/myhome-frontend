@@ -1,5 +1,17 @@
 import gql from 'graphql-tag';
 
+
+export const Change_Home_Name = gql `
+mutation updateLar($nome: String!, $larId: String!){
+  updateLar(nome: $nome, larId: $larId){
+    Lar{
+      id
+    }
+  }
+}
+
+`;
+
 export const Create_Registro_Conta_Variavel = gql `mutation CreateRegistroContaVariavel($contaId:String!,$responsavelId: String!, $valor: String!){
   createRegistroContaVariavel(contaId: $contaId, responsavelId: $responsavelId, valor: $valor){
     Registro{
