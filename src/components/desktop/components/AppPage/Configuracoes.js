@@ -62,9 +62,9 @@ const Configuracoes = (props) =>{
         </div>
         ,
       
-        okText: "Cancelar",
-        okType: 'danger',
-        cancelText: 'Cancelar',
+        //okText: "Cancelar",
+        //okType: 'danger',
+        //cancelText: 'Cancelar',
         onOk() {
             //removeUser({variables:{email:storage.person.personal.email, larId:storage.person.lar.id}})
         },
