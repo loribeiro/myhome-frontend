@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import CurrencyInput from 'react-currency-input';
 import { isMobile } from 'react-device-detect';
 import { useSelector } from 'react-redux';
-import { Create_Conta_Fixa, Create_Registro_Conta_Fixa, Delete_Tarefas } from "../../../../Queries";
+import {Create_Conta_Variavel, Create_Registro_Conta_Variavel ,Create_Conta_Fixa, Create_Registro_Conta_Fixa, Delete_Tarefas } from "../../../../Queries";
 const { Option } = Select;
 const { TabPane } = Tabs;
 const { Step } = Steps;
@@ -130,7 +130,7 @@ const Contas = (props) =>{
       dataSource={data_table_fixa}
       pagination={false}
       //scroll = {{ y: 240 }}
-  />
+    />
     )
   }
   const AddContaFixa = (props) => {
@@ -170,7 +170,6 @@ const Contas = (props) =>{
       createRegistro({variables:{contaId:data.createContaFixa.Contas.id,responsavelId:key.toString(), valor: value.valor.split('$')[1].replace('.','').replace(',','.')}})
       console.log(`${key}:`, value.valor.split('$')[1].replace('.','').replace(',','.'));
      
-      
     }
         
       refetch()
@@ -194,7 +193,7 @@ const Contas = (props) =>{
              <Select  defaultValue="" style={{ width: 120 }} onChange={handleChange}>
                 <Option value="Aluguel">Aluguel</Option>
                 <Option value="Internet">Internet</Option>
-                <Option value="Luz">Luz</Option>
+                <Option value="IPTU">IPTU</Option>
                 <Option value="Condominio">Condominio</Option>
   
              </Select>
@@ -302,6 +301,7 @@ const Contas = (props) =>{
   }
   const ContasVariaveis = (props) =>{
     const storage = useSelector(state => state)
+    const [visible, setVisible] = useState(false)
     const data_table_variavel = []
     const dataSource = []
     const columns = [
@@ -322,7 +322,7 @@ const Contas = (props) =>{
         key:c.id,
         conta: c.nome,
         vencimento:c.vencimento,
-        description:<ContaIntTable moradores={dataSource} informacoes={c.informacoescontafixaSet}/>
+        description:<div></div>
   
       },)
     })
@@ -339,6 +339,101 @@ const Contas = (props) =>{
                   pagination={false}
                   scroll = {{ y: 240 }}
                   />
+                   <Button type="primary" htmlType="submit" onClick={() => setVisible(true)}>
+              Adicionar Conta Variavel
+            </Button>
+            <Modal
+            title="Adicionar Conta"
+            footer = {null}
+            visible = {visible}
+            closable
+            destroyOnClose
+          >
+  <AddContaVariavel setVisible = {setVisible} refetch={props.refetch} moradores = {dataSource} larId = {storage.person.lar.id}/>
+  </Modal>
         </div>
     )
   }
+
+const AddContaVariavel = (props) => {
+  const [createConta, { loading: mutationLoading, error: mutationError,data }] = useMutation(Create_Conta_Variavel);
+  const [conta, setConta ] = useState("")
+  const [date, setDate ] = useState("5")
+  const {refetch} = props
+    function handleChange(value) {
+      console.log(`selected ${value}`);
+      setConta(value)
+    }
+    function onChange(value) {
+      //console.log(date, dateString);
+      setDate(value.toString())
+    }
+    const next = () => {
+      if( date !=="" && conta !==""){
+        createConta({variables:{nome: conta, vencimento:date, larId:props.larId}})
+        
+      }
+    };
+    if(mutationLoading){
+      return(
+        <h1>Carregando</h1>
+      )
+    }
+    if(data){
+      return(
+        <Result
+      status="success"
+      title="Conta adicionada com sucesso"
+      
+      extra={[
+        <Button type="primary" key="console" onClick={()=>(props.setVisible(false), refetch())}>
+         Fechar
+        </Button>,
+        
+      ]}
+    />
+      )
+    }
+  return(
+    <div style={{textAlign:"center"}}>
+        <div>
+                  <Form  name="dynamic_form_nest_item" preserve={false} autoComplete="off">
+                  <Space direction="vertical">
+                  <Form.Item
+                    
+                    //rules={[{ required: false, message: 'Faltando Tarefa' }]}
+                    label="Conta"
+                    
+                  >
+                    <Select  defaultValue="" style={{ width: 120 }} onChange={handleChange}>
+                        
+                        <Option value="Gas">Gás</Option>
+                        <Option value="Luz">Luz</Option>
+                        <Option value="Agua">Agua</Option>
+          
+                    </Select>
+                    </Form.Item>
+                    <Form.Item
+                    
+                    //rules={[{ required: false, message: 'Faltando Tarefa' }]}
+                    label="Vencimento(dia)"
+                    
+                    >
+          
+                    <InputNumber min={1} max={30} defaultValue={5} onChange={onChange} />
+                  </Form.Item>
+                  <Button type="primary"  onClick={() => {
+                    if( date !=="" && conta !==""){
+                      createConta({variables:{nome: conta, vencimento:date, larId:props.larId}})
+                      
+                    }
+                  }}>
+                      Adicionar
+                    </Button>
+                  </Space>
+                  </Form>
+        </div>
+        <Button type = "danger" onClick={()=>(props.setVisible(false))}> Cancelar</Button>
+    </div>
+  )
+} 
