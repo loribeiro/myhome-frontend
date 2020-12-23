@@ -12,8 +12,8 @@ mutation updateLar($nome: String!, $larId: String!){
 
 `;
 
-export const Create_Registro_Conta_Variavel = gql `mutation CreateRegistroContaVariavel($contaId:String!,$responsavelId: String!, $valor: String!){
-  createRegistroContaVariavel(contaId: $contaId, responsavelId: $responsavelId, valor: $valor){
+export const Create_Registro_Conta_Variavel = gql `mutation CreateRegistroContaVariavel($contaId:String!,$responsavelId: String!, $valor: String!, $month: String!){
+  createRegistroContaVariavel(contaId: $contaId, responsavelId: $responsavelId, valor: $valor, month: $month){
     Registro{
       id
     }
